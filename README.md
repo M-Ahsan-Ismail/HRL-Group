@@ -20,7 +20,7 @@ Developed the dealer agrement form includes details from dealer details to brand
 
 
 
-## Sales & Warranty
+## Sales_Warranty & Portal
 Developed the Warranty Card Module, that streamlines warranty management. It allows to add warranty duration, on the product form and generate warranty cards for products within sale order lines by clicking the "Add Warranty" button. A wizard opens with pre-filled details, automatically calculating the warranty end date and duration based on the product's form warranty settings. The module first checks if the product is already under an active warranty for the sale order, preventing duplicates. If no active warranty exists, it creates a new warranty with a unique warranty number, linked to the sale order via smart button. On warranty form, users can select terms and conditions, as well as specify what is included and excluded in the warranty, with a dedicated configuration menu to manage these details. 
 Implemented cron job for warranties whose end date is coming that suto checks today.date is end date of any warranty and expires that.
 Developed the moderan warranty portal where user can track his warranty details.
