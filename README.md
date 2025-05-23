@@ -29,6 +29,26 @@ Added a "Send by Mail" button on the Warranty form. Clicking the button opens th
 Admin can force_expire the card also.
 
 
+### 🗓️ Leave Request Portal
+Developed a custom leave request portal with modern UI design using dynamic elements and clean layout.
+Enhanced the leave type configuration to clearly define categories such as Hajj/Umrah, Sick, Casual, Annual, Compensatory, and Unpaid.
+
+##### Enabled users to:
+Apply for new time off by selecting leave type, start/end date, and reason.
+Automatically show/hide the document upload field based on selected leave type (e.g., shows only for "Sick").
+View all applied time offs with their current status: Approved, Pending, Rejected, etc.
+Update or cancel time offs if they are still in the To Approve stage.
+
+##### Added functionality to filter time offs by last week, last month, last year.
+Users can group by leave type or status and sort by start date, end date, or duration.
+
+##### If a time off request is:
+Rejected: a red banner appears with a rejection message, all fields become read-only, and action buttons are disabled.
+Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
+
+
+
+
 ## Grievance Management & Portal
 
 Developed the Grievance Management Module, allowing employees to submit grievances through a modern, user-friendly portal. Employees can select the grievance type, provide issue details, and optionally upload supporting documents. Upon submission, a tracking ID is generated and displayed. The portal features a modern design with a responsive navbar that allows seamless navigation between submission and tracking forms.
