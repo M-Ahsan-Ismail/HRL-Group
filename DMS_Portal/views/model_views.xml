@@ -1,0 +1,206 @@
+<odoo>
+
+    <record id="dms_portal_application_sequence" model="ir.sequence">
+        <field name="name">Sequence DMS Portal</field>
+        <field name="code">dms.portal.sequence</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+
+    <!-- Tree (List) View -->
+    <record id="view_dms_portal_tree" model="ir.ui.view">
+        <field name="name">dms.portal.tree</field>
+        <field name="model">dms.portal</field>
+        <field name="arch" type="xml">
+            <list string="DMS Portal">
+                <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                <field name="name"/>
+                <field name="reference_no"/>
+                <field name="city"/>
+                <field name="activity_ids" optional="show" widget="list_activity"/>
+                <field name="state"
+                       decoration-danger="state == 'rejected'"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'under_review'"
+                       decoration-muted="state == 'draft'" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dms_portal_form" model="ir.ui.view">
+        <field name="name">dms.portal.form</field>
+        <field name="model">dms.portal</field>
+        <field name="arch" type="xml">
+            <form string="DMS Portal">
+
+                <header>
+                    <button name="action_submit" type="object" string="Submit"
+                            invisible="state !=  'draft'"/>
+                    <button name="action_approve" type="object" string="Approve"
+                            invisible="state not in  ['under_review']"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            invisible="state not in ['under_review']"/>
+                    <button name="create_partner" type="object" string="Create Partner"
+                            invisible="state not in ['approved']"/>
+                    <button name="action_reset" type="object" string="Reset TO Draft"
+                            invisible="state not in ['approved','rejected']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,under_review,approved,rejected"/>
+                </header>
+                <sheet>
+                    <div name="ribbon" class="oe_title">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                                invisible="state != 'rejected'"/>
+                    </div>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Person Details" readonly="state in ['under_review','approved','rejected']">
+                            <field name="id" string="Application Number" readonly="1" class="text-primary fw-bold"/>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="email_id"/>
+                            <field name="date_of_birth"/>
+                            <field name="assigne_id"/>
+                        </group>
+                        <group string="Contact &amp; Qualification"
+                               readonly="state in ['under_review','approved','rejected']">
+                            <field name="phone_no"/>
+                            <field name="mobile_no"/>
+                            <field name="qualification"/>
+                            <field name="current_occupation"/>
+                            <field name="request_month"/>
+                            <field name="approved_month"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Location Info">
+                            <group readonly="state in ['under_review','approved','rejected']">
+                                <field name="location"/>
+                                <field name="location2"/>
+                                <field name="city"/>
+                                <field name="pincode"/>
+                                <field name="province"/>
+                                <field name="country_id"/>
+                            </group>
+                        </page>
+                        <page string="Advertisement Details">
+                            <group readonly="state in ['under_review','approved','rejected']">
+                                <field name="dealer_vacancy_known_through"/>
+                                <field name="code"/>
+                            </group>
+                        </page>
+                        <page string="Business Details">
+                            <group readonly="state in ['under_review','approved','rejected']">
+                                <field name="company_name"/>
+                                <field name="business_type"/>
+                                <field name="contact_person_name"/>
+                                <field name="business_email"/>
+                                <field name="business_phone"/>
+                                <field name="business_address"/>
+                            </group>
+                            <group>
+                                <field name="existing_dealership"/>
+                                <group invisible="existing_dealership ==  False"
+                                       readonly="state in ['under_review','approved','rejected']">
+                                    <field name="infrastructure_detail"/>
+                                    <field name="business_staff_count"/>
+                                    <field name="licence_upload"/>
+                                    <field name="registration_upload"/>
+                                    <field name="ownership_proof"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="tax_legal_registration"/>
+                                <group invisible="tax_legal_registration == False"
+                                       readonly="state in ['under_review','approved','rejected']">
+                                    <field name="tax_ntn_number"/>
+                                    <field name="tax_cnic"/>
+                                    <field name="secp_certificate_number"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Site Location">
+                            <group readonly="state in ['under_review','approved','rejected']">
+                                <field name="not_available_site_location"/>
+                                <field name="available_site_location"/>
+                                <field name="total_area"/>
+                            </group>
+                        </page>
+                        <page string="Investment">
+                            <group readonly="state in ['under_review','approved','rejected']">
+                                <field name="investment_from"/>
+                                <field name="investment_to"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_dms_portal_kanban" model="ir.ui.view">
+        <field name="name">dms.portal.kanban</field>
+        <field name="model">dms.portal</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="email_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div name="ribbon" class="oe_title">
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                                    nvisible="state != 'reject'"/>
+                        </div>
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <strong>
+                                <field name="first_name"/> <field name="last_name"/>
+                            </strong>
+                            <div>
+                                <span>Email: <field name="email_id"/></span><br/>
+                                <span>City: <field name="city"/></span><br/>
+                                <span>Occupation: <field name="current_occupation"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search and Group By Definition -->
+    <record id="dms_portal_search_group_by_id" model="ir.ui.view">
+        <field name="name">Group &amp; FilterBy</field>
+        <field name="model">dms.portal</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Archived Records" name="active" domain="[('active','=',False)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Creation Date" name="group_by_create_date" context="{'group_by': 'create_date'}"/>
+                    <filter string="Created By" name="group_by_create_uid" context="{'group_by': 'create_uid'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+
+
+
+</odoo>

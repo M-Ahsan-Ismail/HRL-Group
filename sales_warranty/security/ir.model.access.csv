@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sales_warranty,sales.warranty,model_sales_warranty,,1,1,1,1
+access_sales_warranty_wizard,sales.warranty.wizard,model_sales_warranty_wizard,,1,1,1,1
+access_warranty_terms,warranty.terms,model_warranty_terms,,1,1,1,1
+access_warranty_includes,warranty.includes,model_warranty_includes,,1,1,1,1
+access_warranty_excludes,warranty.excludes,model_warranty_excludes,,1,1,1,1
+access_warranty_claim,warranty.claim,model_warranty_claim,,1,1,1,1
+access_rejection_wizard,rejection.wizard,model_rejection_wizard,,1,1,1,1
+access_approve_wizard,approve.wizard,model_approve_wizard,,1,1,1,1

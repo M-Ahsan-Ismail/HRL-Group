@@ -1,0 +1,826 @@
+<odoo>
+    <template id="dashboard_controller_dms_id" name="Portal My Home: DashBoard View" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="card o_portal_doc_entry border-0 shadow-sm"
+                     style="max-width: 420px; height: 120px; background: linear-gradient(135deg, #2A3F5F, #1C2A44); border-radius: 12px; transition: all 0.3s ease-in-out; position: relative; overflow: hidden;"
+                     t-att-class="'hover-shadow-lg' if True else ''">
+                    <!-- Dashboard Icon (Top-Right with Subtle Opacity) -->
+                    <img src="/DMS_Portal/static/src/img/dashboard_new.png" alt="Dashboard Icon"
+                         style="width: 40px; height: 40px; position: absolute; top: 12px; right: 12px; opacity: 0.8;"/>
+
+                    <!-- Clickable Link -->
+                    <a t-att-href="'/dealer/dashboard'" class="text-decoration-none d-block h-100">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-3">
+                            <!-- Title -->
+                            <h4 class="mb-2"
+                                style="font-family: 'Roboto', sans-serif; font-weight: 600; font-size: 20px; color: #FFFFFF; letter-spacing: 0.5px;">
+                                Dealer Dashboard
+                            </h4>
+                            <!-- Subtitle -->
+                            <p class="mb-0 text-muted"
+                               style="font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 400; color: #B0C4DE;">
+                                Admin Overview <i class="fa fa-chart-line ms-1" style="color: #7C8DB5;"></i>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Inline CSS for Hover Effects and Odoo Styling -->
+        <xpath expr="." position="inside">
+            <style>
+                .o_portal_doc_entry {
+                    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+                }
+
+                .o_portal_doc_entry:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+                }
+
+                .hover-shadow-lg {
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                }
+
+                .text-muted {
+                    color: #B0C4DE !important;
+                }
+            </style>
+        </xpath>
+    </template>
+
+
+    <template id="dealer_ship_admin_dashboard" name="Dealer Dashboard">
+        <!-- Main Layout -->
+        <t t-call="website.layout">
+            <div id="wrap" class="o_portal_wrap">
+                <div class="o_portal_navbar">
+                    <div class="container">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#navbarNav">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a href="/my/home" class="nav-link">
+                                            <i class="fa fa-home me-1"></i> Portal Home
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                           data-bs-toggle="dropdown">
+                                            <i class="fa fa-user-circle me-1"></i> My Account
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item" href="/my/account">Profile</a>
+                                            <a class="dropdown-item" href="/web/session/logout">Logout</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div class="container mt-4">
+                    <div class="row mb-4">
+                        <div class="col-lg-12">
+                            <div class="card shadow-sm border-0 rounded-lg">
+                                <div class="card-body p-4">
+
+                                    <h1 class="card-title mb-0 text-primary fw-bold">
+                                        <a href="/dealer/dashboard" class="navbar-brand">
+                                            <span></span>Dealer Management Dashboard
+                                        </a>
+                                    </h1>
+
+                                    <p class="text-muted">Monitor and manage dealer applications and approvals</p>
+
+                                    <!-- Filter Controls -->
+                                    <form action="/dealer/dashboard" method="GET" class="row g-3 align-items-end mt-3"
+                                          id="filter-form">
+                                        <div class="col-md-4">
+                                            <label class="form-label">View Type</label>
+                                            <select name="request_type" class="form-select rounded-pill"
+                                                    id="view-type-select">
+                                                <option value="dealer_applications"
+                                                        t-att-selected="request_type == 'dealer_applications'">New
+                                                    Applications</option>
+                                                <option value="approve_applications"
+                                                        t-att-selected="request_type == 'approve_applications'">Approved
+                                                    Applications</option>
+                                                <option value="waiting_applications"
+                                                        t-att-selected="request_type == 'waiting_applications'">Pending
+                                                    Applications</option>
+                                                <option value="all_dealer_applications"
+                                                        t-att-selected="request_type == 'all_dealer_applications'">All
+                                                    Dealers</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4" id="month-select-container">
+                                            <label class="form-label">Month</label>
+                                            <input type="month" name="require_month" class="form-control rounded-pill"
+                                                   id="month-select"
+                                                   t-att-value="kwargs.get('require_month', '')"/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-primary rounded-pill w-100">
+                                                <i class="fa fa-filter me-2"></i> Apply Filters
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-primary">
+                                            <i class="fa fa-file-alt"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">New Applications</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len(dealership_applications)"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Approved</h6>
+                                            <h3 class="stat-value mb-0"><t t-esc="len(approved_applications)"/></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-warning">
+                                            <i class="fa fa-clock"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Pending</h6>
+                                            <h3 class="stat-value mb-0"><t t-esc="len(pending_applications)"/></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-info">
+                                            <i class="fa fa-users"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Total Dealers</h6>
+                                            <h3 class="stat-value mb-0"><t t-esc="len(all_dealers)"/></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Display Section -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-sm rounded-lg">
+                                <div class="card-header bg-transparent border-0 pt-4 pb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title mb-0 text-primary fw-bold">
+                                            <t t-if="request_type == 'dealer_applications'">New Dealer Applications</t>
+                                            <t t-elif="request_type == 'approve_applications'">Approved Dealer
+                                                Applications</t>
+                                            <t t-elif="request_type == 'waiting_applications'">Pending Dealer
+                                                Applications</t>
+                                            <t t-elif="request_type == 'all_dealer_applications'">All Approved
+                                                Dealers</t>
+                                        </h4>
+                                        <span class="badge bg-primary rounded-pill" t-if="selected_month">
+                                            <i class="fa fa-calendar me-1"></i> <t t-esc="selected_month"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <!-- New Applications -->
+                                    <div t-if="request_type == 'dealer_applications'" class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Applicant</th>
+                                                    <th>Company</th>
+                                                    <th>Business Type</th>
+                                                    <th>Country</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="dealership_applications">
+                                                    <tr t-foreach="dealership_applications" t-as="dealer">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="applicant-avatar me-3">
+                                                                    <t t-if="dealer.get('Image')">
+                                                                        <img t-att-src="'data:image/png;base64,' + dealer['Image']"
+                                                                             class="rounded-circle" width="40"
+                                                                             height="40"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="avatar-placeholder rounded-circle">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0"><t
+                                                                            t-esc="dealer['Applicant_Name']"/></h6>
+                                                                    <small class="text-muted">ID: <t
+                                                                            t-esc="dealer['Application_ID']"/></small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><t t-esc="dealer['company_name']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="dealer['business_type']"/></span></td>
+                                                        <td><t t-esc="dealer['Country']"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr t-if="not dealership_applications">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+                                                            <h5>No Applications Found</h5>
+                                                            <p class="text-muted">There are no new dealer applications
+                                                                for the selected period.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Approved Applications -->
+                                    <div t-if="request_type == 'approve_applications'" class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Dealer</th>
+                                                    <th>Company</th>
+                                                    <th>Business Type</th>
+                                                    <th>Country</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="approved_applications">
+                                                    <tr t-foreach="approved_applications" t-as="dealer">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="applicant-avatar me-3">
+                                                                    <t t-if="dealer.get('Image')">
+                                                                        <img t-att-src="'data:image/png;base64,' + dealer['Image']"
+                                                                             class="rounded-circle" width="40"
+                                                                             height="40"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="avatar-placeholder rounded-circle">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0"><t
+                                                                            t-esc="dealer['Applicant_Name']"/></h6>
+                                                                    <small class="text-muted">ID: <t
+                                                                            t-esc="dealer['Application_ID']"/></small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><t t-esc="dealer['company_name']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="dealer['business_type']"/></span></td>
+                                                        <td><t t-esc="dealer['Country']"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr t-if="not approved_applications">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-check-circle fa-3x text-muted mb-3"></i>
+                                                            <h5>No Approved Applications</h5>
+                                                            <p class="text-muted">There are no approved applications for
+                                                                the selected period.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pending Applications -->
+                                    <div t-if="request_type == 'waiting_applications'" class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Applicant</th>
+                                                    <th>Company</th>
+                                                    <th>Business Type</th>
+                                                    <th>Country</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="pending_applications">
+                                                    <tr t-foreach="pending_applications" t-as="dealer">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="applicant-avatar me-3">
+                                                                    <t t-if="dealer.get('Image')">
+                                                                        <img t-att-src="'data:image/png;base64,' + dealer['Image']"
+                                                                             class="rounded-circle" width="40"
+                                                                             height="40"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="avatar-placeholder rounded-circle">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0"><t
+                                                                            t-esc="dealer['Applicant_Name']"/></h6>
+                                                                    <small class="text-muted">ID: <t
+                                                                            t-esc="dealer['Application_ID']"/></small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><t t-esc="dealer['company_name']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="dealer['business_type']"/></span></td>
+                                                        <td><t t-esc="dealer['Country']"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr t-if="not pending_applications">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-clock fa-3x text-muted mb-3"></i>
+                                                            <h5>No Pending Applications</h5>
+                                                            <p class="text-muted">There are no pending applications for
+                                                                the selected period.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- All Dealers -->
+                                    <div t-if="request_type == 'all_dealer_applications'" class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Dealer</th>
+                                                    <th>Company</th>
+                                                    <th>Business Type</th>
+                                                    <th>Country</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="all_dealers">
+                                                    <tr t-foreach="all_dealers" t-as="dealer">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="applicant-avatar me-3">
+                                                                    <t t-if="dealer.get('Image')">
+                                                                        <img t-att-src="'data:image/png;base64,' + dealer['Image']"
+                                                                             class="rounded-circle" width="40"
+                                                                             height="40"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="avatar-placeholder rounded-circle">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0"><t
+                                                                            t-esc="dealer['Applicant_Name']"/></h6>
+                                                                    <small class="text-muted">ID: <t
+                                                                            t-esc="dealer['Application_ID']"/></small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><t t-esc="dealer['company_name']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="dealer['business_type']"/></span></td>
+                                                        <td><t t-esc="dealer['Country']"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr t-if="not all_dealers">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-users fa-3x text-muted mb-3"></i>
+                                                            <h5>No Dealers Found</h5>
+                                                            <p class="text-muted">There are no approved dealers in the
+                                                                system.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add this below the existing Data Display Section in the dealer_ship_admin_dashboard template -->
+                    <!-- Sale Order Data Displaying Working Here -->
+                    <div class="row mt-5">
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-sm rounded-lg">
+                                <div class="card-header bg-transparent border-0 pt-4 pb-3">
+                                    <h4 class="card-title mb-0 text-primary fw-bold">View Sale Orders</h4>
+                                </div>
+                                <div class="card-body p-4">
+                                    <!-- Filter Form for Sale Orders -->
+                                    <form action="/dealer/dashboard" method="GET" class="row g-3 align-items-end mb-4">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Select User</label>
+                                            <select name="env_user" class="form-select rounded-pill">
+                                                <option value="">Select User</option>
+                                                <t t-foreach="res_users" t-as="user">
+                                                    <option t-att-value="user['id']"
+                                                            t-att-selected="kwargs.get('env_user') == str(user['id']) and 'selected'">
+                                                        <t t-esc="user['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Start Date</label>
+                                            <input type="date" name="start_date" class="form-control rounded-pill"
+                                                   t-att-value="kwargs.get('start_date', '')"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">End Date</label>
+                                            <input type="date" name="end_date" class="form-control rounded-pill"
+                                                   t-att-value="kwargs.get('end_date', '')"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-primary rounded-pill w-100">
+                                                <i class="fa fa-filter me-2"></i> Filter
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <!-- Sale Orders Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Sale Order</th>
+                                                    <th>Product</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="so_list">
+                                                    <tr t-foreach="so_list" t-as="so">
+                                                        <td class="ps-4"><t t-esc="so['sale_order']"/></td>
+                                                        <td><t t-esc="', '.join(so['product']) if so['product'] else 'No Products'"/></td>
+                                                        <td><t t-esc="'%.2f' % so['total']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="so['state']"/></span></td>
+                                                    </tr>
+                                                </t>
+
+                                                <tr t-if="not so_list">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+                                                            <h5>No Sale Orders Found</h5>
+                                                            <p class="text-muted">No sale orders match the selected
+                                                                criteria.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Opportunity Data Displaying Working Here -->
+                    <div class="row mt-5">
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-sm rounded-lg">
+                                <div class="card-header bg-transparent border-0 pt-4 pb-3">
+                                    <h4 class="card-title mb-0 text-primary fw-bold">View Opportunities</h4>
+                                </div>
+                                <div class="card-body p-4">
+                                    <!-- Filter Form for Opportunities  -->
+                                    <form action="/dealer/dashboard" method="GET" class="row g-3 align-items-end mb-4">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Select Salesperson</label>
+                                            <select name="sales_person" class="form-select rounded-pill">
+                                                <option value="">Select Salesperson</option>
+                                                <t t-foreach="res_users" t-as="user">
+                                                    <option t-att-value="user['id']"
+                                                            t-att-selected="kwargs.get('sales_person') == str(user['id']) and 'selected'">
+                                                        <t t-esc="user['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Start Date</label>
+                                            <input type="date" name="start_date" class="form-control rounded-pill"
+                                                   t-att-value="kwargs.get('start_date', '')"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">End Date</label>
+                                            <input type="date" name="end_date" class="form-control rounded-pill"
+                                                   t-att-value="kwargs.get('end_date', '')"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-primary rounded-pill w-100">
+                                                <i class="fa fa-filter me-2"></i> Filter
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <!-- opportunity  Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Opportunity</th>
+                                                    <th>Description</th>
+                                                    <th>Expected Revenue</th>
+                                                    <th>Stage</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="opportunity_list">
+                                                    <tr t-foreach="opportunity_list" t-as="opportunity">
+                                                        <td class="ps-4"><t t-esc="opportunity['name']"/></td>
+                                                        <td><t t-esc="opportunity['description']"/></td>
+                                                        <td><t t-esc="'%.2f' % opportunity['expected_revenue']"/></td>
+                                                        <td><span class="badge bg-light text-dark"><t
+                                                                t-esc="opportunity['stage']"/></span></td>
+                                                    </tr>
+                                                </t>
+
+                                                <tr t-if="not opportunity_list">
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="empty-state">
+                                                            <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+                                                            <h5>No Opportunities Found</h5>
+                                                            <p class="text-muted">No opportunities match the selected
+                                                                criteria.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- CSS Styles for Dashboard -->
+    <template id="dealer_dashboard_assets" name="Dealer Dashboard Assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+            <style>
+                /* Dashboard styles */
+                .text-gradient {
+                    background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .o_portal_navbar {
+                    background-color: #fff;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                    position: sticky;
+                    top: 0;
+                    z-index: 1000;
+                }
+
+                .stat-card {
+                    transition: transform 0.3s ease;
+                    overflow: hidden;
+                }
+
+                .stat-card:hover {
+                    transform: translateY(-5px);
+                }
+
+                .stat-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 12px;
+                    color: white;
+                    font-size: 1.2rem;
+                }
+
+                .stat-title {
+                    color: #6c757d;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.25rem;
+                }
+
+                .stat-value {
+                    font-weight: 600;
+                    font-size: 1.8rem;
+                }
+
+                .card {
+                    border-radius: 16px;
+                    overflow: hidden;
+                    transition: box-shadow 0.3s ease;
+                }
+
+                .card:hover {
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+                }
+
+                .card-header {
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                }
+
+                .applicant-avatar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 40px;
+                    height: 40px;
+                    overflow: hidden;
+                }
+
+                .avatar-placeholder {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 40px;
+                    height: 40px;
+                    background-color: #e9ecef;
+                    color: #6c757d;
+                }
+
+                .table > :not(caption) > * > * {
+                    padding: 1rem 0.5rem;
+                }
+
+                .empty-state {
+                    padding: 2rem 0;
+                    color: #6c757d;
+                }
+
+                /* Customizing form elements */
+                .form-control, .form-select {
+                    border: 1px solid #e9ecef;
+                    padding: 0.6rem 1rem;
+                }
+
+                .form-control:focus, .form-select:focus {
+                    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+                }
+
+                /* Modern scrollbar for tables */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px;
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 10px;
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: #ddd;
+                    border-radius: 10px;
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: #ccc;
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 992px) {
+                    .stat-card {
+                        margin-bottom: 1rem;
+                    }
+                }
+
+                /* Animation for loading states */
+                @keyframes pulse {
+                    0% {
+                        opacity: 0.6;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.6;
+                    }
+                }
+            </style>
+            <script>
+                $(document).ready(function() {
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+
+                // Adding active class to current navigation item
+                $('.navbar-nav .nav-link').each(function() {
+                if ($(this).attr('href') === window.location.pathname) {
+                $(this).addClass('active');
+                }
+                });
+
+                // Handle View Type change to disable/enable Month picker
+                const viewTypeSelect = $('#view-type-select');
+                const monthSelectContainer = $('#month-select-container');
+                const monthSelect = $('#month-select');
+
+                function toggleMonthSelect() {
+                if (viewTypeSelect.val() === 'all_dealer_applications') {
+                // Disable the Month picker and reset its value
+                monthSelect.prop('disabled', true);
+                monthSelect.val(''); // Reset to empty
+                monthSelectContainer.addClass('opacity-50'); // Optional: Reduce opacity for visual feedback
+                } else {
+                // Enable the Month picker
+                monthSelect.prop('disabled', false);
+                monthSelectContainer.removeClass('opacity-50');
+                }
+                }
+
+                // Run on page load
+                toggleMonthSelect();
+
+                // Run on View Type change
+                viewTypeSelect.on('change', toggleMonthSelect);
+
+                // Handle form submission to format require_month as YYYY-MM-DD
+                $('#filter-form').on('submit', function(e) {
+                if (viewTypeSelect.val() === 'all_dealer_applications') {
+                // Remove the require_month parameter from the form submission
+                monthSelect.removeAttr('name'); // Temporarily remove the name attribute so it's not sent
+                } else {
+                // Restore the name attribute and format the month value
+                monthSelect.attr('name', 'require_month');
+                let monthValue = monthSelect.val(); // e.g., "2025-05"
+                if (monthValue) {
+                // Convert "2025-05" to "2025-05-01"
+                monthSelect.val(monthValue + '-01');
+                } else {
+                // If no month is selected, remove the parameter to avoid invalid submission
+                monthSelect.removeAttr('name');
+                }
+                }
+                });
+                });
+            </script>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,330 @@
+<odoo>
+    <template id="dealer_agreement_report_id">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="obj">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div style="text-align: center;">
+                                <h1><strong>Dealer Agreement</strong></h1>
+                            </div>
+                        </div>
+                        <br/><br/>
+
+
+                        <div class="row" style="text-align: center">
+                            <div class="col-6">
+                                <h5><strong>Dealer Agreement: <t t-esc="obj.agreement_reference"/></strong></h5>
+                            </div>
+                            <div class="col-6">
+                                <h5><strong>Agreement Date: <t t-esc="obj.agreement_date"/></strong></h5>
+                            </div>
+                        </div>
+
+
+                        <br/>
+
+
+                        <div class="row">
+
+
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless" width="50%">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left" colspan="6">
+                                                <h5><strong>General Information</strong></h5>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Dealer Name</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.dealer_name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Company Name</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.dealer_company_name"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Dealer Code</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.dealer_code"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Agreement Start Date</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.agreement_start_date"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Agreement End Date</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.agreement_end_date"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless" width="50%">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left" colspan="6">
+                                                <h5><strong> Dealer Details</strong></h5>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Contact Person Name</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.contact_person_name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Phone Number</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.phone_number"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Email Address</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.email_address"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Business Address</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.business_address"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>GST TAX/ID</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.gst_tax_id"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="row">
+
+
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless" width="50%">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left" colspan="6">
+                                                <h5><strong>DealerShip Scope</strong></h5>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Vehicle Brand Covered</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-foreach="obj.vehicle_brand_ids" t-as="brand">
+                                                <t t-esc="brand.name"/><t t-if="not brand_is_last"><span>, </span></t>
+                                            </t>
+                                            <t t-if="not obj.vehicle_brand_ids">
+                                                N/A
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Vehicle Type</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.vehicle_type_id.name"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Region Territory Assigned</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.region_territory"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Monthly Sales Target</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.sales_target_monthly"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Annual Sales Quota</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.annual_sales_quota"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless" width="50%">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left" colspan="6">
+                                                <h5><strong>Financial Terms</strong></h5>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Initial Deposit/Investment</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.initial_deposit"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Commission Rate (%)</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.commission_rate"/>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Incentive Structure</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.incentive_structure"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Credit Limit</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.credit_limit"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align: left;" class="col-6">
+                                            <strong>Agreement Type</strong>
+                                        </th>
+                                        <td style="text-align: left;">
+                                            <t t-esc="obj.agreement_type"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+
+
+                        <div class="row">
+                            <span><h5><strong>Renewal Terms</strong></h5><br/><t t-esc="obj.renewal_terms"/></span>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                        <div class="row">
+                            <span><h5><strong>Termination Clause</strong></h5><br/><t
+                                    t-esc="obj.termination_clause"/></span>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                        <div class="row">
+                            <span><h5><strong>Penalty Clause</strong></h5><br/><t t-esc="obj.penalty_clause"/></span>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                        <div class="row">
+                            <span><h5><strong>Support Services</strong></h5><br/><t
+                                    t-esc="obj.support_service_ids"/></span>
+                        </div>
+
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="paper_format_rainbow_report" model="report.paperformat">
+        <field name="name">DealerShip &amp; Agreement</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="dealership_agreement_action_id" model="ir.actions.report">
+        <field name="name">DealerShip Report</field>
+        <field name="model">dealer.agreement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dms.dealer_agreement_report_id</field>
+        <field name="binding_model_id" ref="dms.model_dealer_agreement"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="dms.paper_format_rainbow_report"/>
+
+    </record>
+</odoo>

@@ -1,0 +1,123 @@
+<odoo>
+    <record id="dms_brands_form_view" model="ir.ui.view">
+        <field name="name">dms.brands.form</field>
+        <field name="model">dms.brands</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group string="Brands">
+                        <field name="name" widget="char"/>
+                        <field name="code" widget="char"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="logo" widget="image"/>
+                        <field name="description" widget="text"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="dms_brands_tree_view" model="ir.ui.view">
+        <field name="name">dms.brands.tree</field>
+        <field name="model">dms.brands</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" widget="char"/>
+                <field name="code" widget="char"/>
+                <field name="color" widget="color_picker"/>
+                <field name="description" widget="text"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="brand_models_form_view" model="ir.ui.view">
+        <field name="name">brand.models.form</field>
+        <field name="model">brand.models</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group string="Models">
+                        <field name="name" widget="char"/>
+                        <field name="brand_id" widget="many2one_avatar"/>
+                        <field name="model_type" widget="many2one_avatar"/>
+                        <field name="code" widget="char"/>
+                        <field name="description" widget="text"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="brand_models_tree_view" model="ir.ui.view">
+        <field name="name">brand.models.list</field>
+        <field name="model">brand.models</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" widget="char"/>
+                <field name="brand_id" widget="many2one_avatar"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="model_variant_form_view" model="ir.ui.view">
+        <field name="name">model.variant.form</field>
+        <field name="model">model.variant</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Variants">
+                            <field name="name" widget="char"/>
+                            <field name="model_id" widget="many2one"/>
+                            <field name="engine_type" widget="selection_badge"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="feature_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="model_variant_tree_view" model="ir.ui.view">
+        <field name="name">model.variant.tree</field>
+        <field name="model">model.variant</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" widget="char"/>
+                <field name="model_id" widget="many2one"/>
+                <field name="engine_type" widget="selection_badge"/>
+                <field name="color" widget="color_picker"/>
+                <field name="feature_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="variant_features_form_view" model="ir.ui.view">
+        <field name="name">variant.features.form</field>
+        <field name="model">variant.features</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group string="Features">
+                        <field name="name" widget="char"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="variant_features_tree_view" model="ir.ui.view">
+        <field name="name">variant.features.tree</field>
+        <field name="model">variant.features</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" widget="char"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,745 @@
+<odoo>
+    <template id="portal_dealer_request_in" name="Portal My Home : DealerShip Request"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #d7f1ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/portal/base'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                DealerShip Portal
+                                <img src="/DMS_Portal/static/src/img/In_icon.png" alt="Check-in Icon"
+                                     style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['dms.portal'].sudo().search_count([])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">all-time
+                                    requests</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="dealer_ship_request_creation_form" name="Request Creation Form">
+        <t t-call="website.layout">
+            <t t-set="title">DealerShip Request Creation</t>
+
+            <style>
+                /* -------------------------- NavBar Code Started Here ---------------------- */
+
+                .modern-nav-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 15px 0;
+                    backdrop-filter: blur(10px);
+                    background: rgba(100, 100, 124, 0.8);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modern-nav {
+                    width: 100%;
+                    max-width: 1200px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 30px;
+                }
+
+                .nav-logo {
+                    position: relative;
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .logo-glow {
+                    position: absolute;
+                    width: 100%;
+                    height: 5px;
+                    bottom: -5px;
+                    left: 0;
+                    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+                    filter: blur(3px);
+                    animation: glow-pulse 3s infinite;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 10px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .nav-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+                    transition: all 0.5s ease;
+                }
+
+                .nav-link:hover {
+                    background: rgba(0, 212, 255, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .nav-link:hover::before {
+                    left: 100%;
+                }
+
+                .nav-icon {
+                    font-size: 1.2em;
+                }
+
+                .nav-text {
+                    position: relative;
+                }
+
+                .nav-text::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -4px;
+                    left: 0;
+                    background-color: #00d4ff;
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover .nav-text::after {
+                    width: 100%;
+                }
+
+                @keyframes glow-pulse {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.5;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .modern-nav {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+
+                    .nav-links {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
+
+                /* -------------------------- NavBar Code Ended Here ---------------------- */
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    color: #fff;
+                    background: #1a1a2e;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .hotel-booking-container {
+                    max-width: 900px; /* Increased from 600px to 900px for wider layout */
+                    background: rgba(0, 0, 0, 0.4);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+                    margin: 50px auto;
+                    text-align: left;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .tab-nav {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                }
+
+                .tab-button {
+                    background: #4B5EAA;
+                    border: none;
+                    padding: 10px 15px;
+                    font-size: 14px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    color: #fff;
+                    transition: background 0.3s ease-in-out;
+                    flex: 1;
+                    margin: 0 5px;
+                    text-align: center;
+                }
+
+                .tab-button.active {
+                    background: #8A4AF3;
+                }
+
+                .tab-button:hover {
+                    background: #6B7BCC;
+                }
+
+                .tab-content {
+                    display: none;
+                }
+
+                .tab-content.active {
+                    display: block;
+                }
+
+                .hotel-booking-container h2 {
+                    text-align: center;
+                    color: #fff;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+
+                .hotel-booking-container p {
+                    text-align: center;
+                    color: #ccc;
+                    margin-bottom: 20px;
+                }
+
+                .form-group {
+                    margin-bottom: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px; /* Added gap for better spacing between fields */
+                }
+
+                .form-group span {
+                    flex: 1; /* Ensures each field takes equal space */
+                }
+
+                .form-group.single-field span {
+                    flex: none; /* For single fields like Qualification and Current Occupation */
+                    width: 100%;
+                }
+
+                .form-group label {
+                    font-weight: bold;
+                    display: block;
+                    color: #fff;
+                    margin-bottom: 5px;
+                }
+
+                .form-control {
+                    background: #fff;
+                    color: #000;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 8px;
+                    padding: 10px;
+                    font-size: 16px;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .form-control::placeholder {
+                    color: #888;
+                }
+
+                input[type="checkbox"] {
+                    width: 18px;
+                    height: 18px;
+                    accent-color: #8A4AF3; /* Matches your primary button color */
+                    cursor: pointer;
+                    appearance: auto; /* Ensure native checkbox is used */
+                }
+
+
+                .btn-primary {
+                    background: #8A4AF3;
+                    border: none;
+                    padding: 12px;
+                    font-size: 18px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    width: 100%;
+                    color: #fff;
+                    transition: background 0.3s ease-in-out;
+                }
+
+                .btn-primary:hover {
+                    background: #6B3FCC;
+                }
+
+                .investment-group {
+                    display: flex;
+                    gap: 20px;
+                }
+
+                .investment-group .form-group {
+                    flex: 1;
+                }
+
+                #advertisement_code {
+                    display: none;
+                }
+            </style>
+
+            <!-- Navigation Bar HTML -->
+            <div class="modern-nav-container">
+                <nav class="modern-nav">
+                    <div class="nav-logo">
+                        <span>Dealership Management</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="/portal/base" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Dealership Request</span>
+                        </a></li>
+                        <li><a href="/request/status" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">Request Status</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="hotel-booking-container">
+                <div class="tab-nav">
+                    <button type="button" class="tab-button active" data-tab="personal">Personal Details</button>
+                    <button type="button" class="tab-button" data-tab="business">Application Form</button>
+                    <button type="button" class="tab-button" data-tab="advertisement">Advertisement Details</button>
+                    <button type="button" class="tab-button" data-tab="site">Site Location</button>
+                    <button type="button" class="tab-button" data-tab="investment">Investment Capacity</button>
+                </div>
+
+                <form action="/portal/base" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <div class="tab-content active" id="personal">
+                        <h2>Personal Details</h2>
+                        <p>Fill Your Personal Details as per Industry Standards</p>
+                        <div class="form-group">
+                            <span>
+                                <label>First Name *</label>
+                                <input type="text" name="first_name" class="form-control" required="required"/>
+                            </span>
+                            <span>
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Email ID *</label>
+                                <input type="email" name="email_id" class="form-control" required="required"/>
+                            </span>
+                            <span>
+                                <label>Date of Birth</label>
+                                <input type="date" name="date_of_birth" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Phone No *</label>
+                                <input type="tel" name="phone_no" class="form-control" required="required"/>
+                            </span>
+                            <span>
+                                <label>Mobile No</label>
+                                <input type="tel" name="mobile_no" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Location *</label>
+                                <input type="text" name="location" class="form-control" required="required"/>
+                            </span>
+                            <span>
+                                <label>Location 2</label>
+                                <input type="text" name="second_location" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>City *</label>
+                                <input type="text" name="city" class="form-control" required="required"/>
+                            </span>
+                            <span>
+                                <label>PinCode</label>
+                                <input type="text" name="pincode" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Country *</label>
+                                <select name="country" class="form-control" required="required">
+                                    <option value="">Select Country</option>
+                                    <t t-foreach="available_country" t-as="country">
+                                        <option t-att-value="country['id']">
+                                            <t t-esc="country['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </span>
+
+                            <span>
+                                <label>State</label>
+                                <input type="text" name="province" class="form-control"/>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Personal Detail</label>
+                                <input type="text" name="qualification" class="form-control"/>
+                            </span>
+                            <span>
+                                <label>Current Occupation</label>
+                                <select name="current_occupation" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="self_employed">Self Employed</option>
+                                    <option value="salaried">Salaried</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </span>
+                        </div>
+                        <button type="button" class="btn-primary" onclick="switchTab('advertisement')">Proceed</button>
+                    </div>
+
+                    <div class="tab-content" id="business">
+                        <h2>Business Details Listing</h2>
+                        <p>Fill Your Business Details as per Industry Standards.</p>
+
+                        <div class="form-group">
+                            <span>
+                                <label>Person Image</label>
+                                <input type="file" name="image_1920" class="form-control" accept="image/*"/>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <span>
+                                <label>Company Name</label>
+                                <input type="text" name="company_name" class="form-control" placeholder="Company Name"/>
+                            </span>
+                            <span>
+                                <label>Business Type</label>
+                                <input type="text" name="business_type" class="form-control"
+                                       placeholder="Business Type"/>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <span>
+                                <label>Contact Person Name</label>
+                                <input type="text" name="contact_person_name" class="form-control"
+                                       placeholder="Contact Person Name"/>
+                            </span>
+                            <span>
+                                <label>Business Email</label>
+                                <input type="email" name="business_email" class="form-control" placeholder="Email"/>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <span>
+                                <label>Business Phone</label>
+                                <input type="tel" name="business_phone" class="form-control" placeholder="Phone"/>
+                            </span>
+                            <span>
+                                <label>Business Address</label>
+                                <input type="text" name="business_address" class="form-control" placeholder="Address"/>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                            <span>
+                                <label>Existing Dealership</label>
+                                <input type="checkbox" id="existingDealershipCheckbox" name="existing_dealership"
+                                       class="form-control"/>
+                            </span>
+                            <span>
+                                <label>Tax Legal Registration</label>
+                                <input type="checkbox" id="taxLegalRegistrationCheckbox" name="tax_legal_registration"
+                                       class="form-control"/>
+                            </span>
+                        </div>
+
+                        <!-- CONDITIONAL FIELDS FOR EXISTING DEALERSHIP -->
+                        <div id="existingDealershipFields" style="display: none;">
+                            <div class="form-group">
+                                <span>
+                                    <label>Infrastructure Detail</label>
+                                    <textarea name="infrastructure_detail" class="form-control"
+                                              placeholder="Infrastructure Detail"></textarea>
+                                </span>
+                                <span>
+                                    <label>Business Staff Count</label>
+                                    <input type="number" name="business_staff_count" class="form-control" step="0.01"
+                                           placeholder="Staff Count"/>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <span>
+                                    <label>License Upload</label>
+                                    <input type="file" name="licence_upload" class="form-control"/>
+                                </span>
+                                <span>
+                                    <label>Registration Upload</label>
+                                    <input type="file" name="registration_upload" class="form-control"/>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <span>
+                                    <label>Ownership Proof</label>
+                                    <input type="file" name="ownership_proof" class="form-control"/>
+                                </span>
+                                <span></span> <!-- Empty span to maintain flexbox layout -->
+                            </div>
+                        </div>
+
+                        <!-- CONDITIONAL FIELDS FOR TAX LEGAL REGISTRATION -->
+                        <div id="taxLegalRegistrationFields" style="display: none;">
+                            <div class="form-group">
+                                <span>
+                                    <label>Tax NTN Number</label>
+                                    <input type="text" name="tax_ntn_number" class="form-control"
+                                           placeholder="Tax NTN Number"/>
+                                </span>
+                                <span>
+                                    <label>Tax CNIC</label>
+                                    <input type="text" name="tax_cnic" class="form-control" placeholder="Tax CNIC"/>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <span>
+                                    <label>SECP Certificate</label>
+                                    <input type="file" name="secp_certificate_number" class="form-control"/>
+                                </span>
+                                <span></span> <!-- Empty span to maintain flexbox layout -->
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" onclick="switchTab('site')">Proceed</button>
+                    </div>
+
+                    <div class="tab-content" id="advertisement">
+                        <h2>Advertisement Details</h2>
+                        <p>Fill Your Advertisement Details as per Industry Standards.</p>
+                        <div class="form-group">
+                            <label>Dealer Vacancy Known Through</label>
+                            <select name="dealer_vacancy_known_through" class="form-control">
+                                <option value="">Select</option>
+                                <option value="advertisement">Advertisement</option>
+                                <option value="area_sale_manager">Area Sale Manager</option>
+                                <option value="regional_manager">Regional Manager</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Do you have an Advertisement code?</label>
+                            <input type="checkbox" id="has_ad_code" name="has_ad_code" class="form-control"/>
+                        </div>
+                        <div class="form-group" id="advertisement_code">
+                            <label>Advertisement Code</label>
+                            <input type="text" name="code" class="form-control"
+                                   placeholder="Enter the advertisement code"/>
+                        </div>
+                        <button type="button" class="btn-primary" onclick="switchTab('business')">Proceed</button>
+                    </div>
+
+
+                    <div class="tab-content" id="site">
+                        <h2>Site Location Details</h2>
+                        <p>Fill Your Site Location Details as per Industry Standards.</p>
+                        <div class="form-group">
+                            <span>
+                                <label>Not Available</label>
+                                <select name="not_available_site_location" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="to_be_purchased">To Be Purchased</option>
+                                    <option value="to_be_rented">To Be Rented</option>
+                                    <option value="to_be_leased">To Be Leased</option>
+                                </select>
+                            </span>
+                            <span>
+                                <label>Available</label>
+                                <select name="available_site_location" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="owned">Owned</option>
+                                    <option value="rented">Rented</option>
+                                    <option value="leased">Leased</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span>
+                                <label>Total Area (in sqft)</label>
+                                <input type="number" name="total_area" class="form-control" step="0.01"/>
+                            </span>
+                            <span>
+                                <label>Query</label>
+                                <input type="text" name="query" class="form-control" placeholder=""/>
+                            </span>
+
+                        </div>
+                        <button type="button" class="btn-primary" onclick="switchTab('investment')">Proceed</button>
+                    </div>
+
+                    <div class="tab-content" id="investment">
+                        <h2>Investment Capacity</h2>
+                        <p>Fill Your Investment Details as per Industry Standards.</p>
+                        <div class="form-group investment-group">
+                            <div class="form-group">
+                                <label>Investment From (PKR)</label>
+                                <input type="number" name="investment_from" class="form-control" step="0.01"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Investment To (PKR)</label>
+                                <input type="number" name="investment_to" class="form-control" step="0.01"/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+            <script type="text/javascript">
+                function switchTab(tabId) {
+                var tabs = document.querySelectorAll('.tab-button');
+                var contents = document.querySelectorAll('.tab-content');
+
+                tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+                });
+                contents.forEach(function(content) {
+                content.classList.remove('active');
+                });
+
+                document.querySelector('.tab-button[data-tab="' + tabId + '"]').classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                // Existing logic for Advertisement Code toggle
+                var hasAdCodeCheckbox = document.getElementById('has_ad_code');
+                var adCodeInput = document.getElementById('advertisement_code');
+
+                if (hasAdCodeCheckbox &amp;&amp; adCodeInput) {
+                hasAdCodeCheckbox.addEventListener('change', function() {
+                adCodeInput.style.display = this.checked ? 'block' : 'none';
+                });
+                // Set initial state on load
+                adCodeInput.style.display = hasAdCodeCheckbox.checked ? 'block' : 'none';
+                }
+
+                // Existing logic for Business Experience toggle
+                var experienceCheckbox = document.getElementById('experienceCheckbox');
+                var businessFields = document.getElementById('businessFields');
+
+                if (experienceCheckbox &amp;&amp; businessFields) {
+                experienceCheckbox.addEventListener('change', function() {
+                businessFields.style.display = this.checked ? 'block' : 'none';
+                });
+                businessFields.style.display = experienceCheckbox.checked ? 'block' : 'none';
+                }
+
+                // New logic for Existing Dealership toggle
+                var existingDealershipCheckbox = document.getElementById('existingDealershipCheckbox');
+                var existingDealershipFields = document.getElementById('existingDealershipFields');
+
+                if (existingDealershipCheckbox &amp;&amp; existingDealershipFields) {
+                existingDealershipCheckbox.addEventListener('change', function() {
+                existingDealershipFields.style.display = this.checked ? 'block' : 'none';
+                });
+                // Set initial state on load
+                existingDealershipFields.style.display = existingDealershipCheckbox.checked ? 'block' : 'none';
+                }
+
+                // New logic for Tax Legal Registration toggle
+                var taxLegalRegistrationCheckbox = document.getElementById('taxLegalRegistrationCheckbox');
+                var taxLegalRegistrationFields = document.getElementById('taxLegalRegistrationFields');
+
+                if (taxLegalRegistrationCheckbox &amp;&amp; taxLegalRegistrationFields) {
+                taxLegalRegistrationCheckbox.addEventListener('change', function() {
+                taxLegalRegistrationFields.style.display = this.checked ? 'block' : 'none';
+                });
+                // Set initial state on load
+                taxLegalRegistrationFields.style.display = taxLegalRegistrationCheckbox.checked ? 'block' : 'none';
+                }
+
+                // NEW: Make tab-nav buttons act as links
+                var tabButtons = document.querySelectorAll('.tab-button');
+                tabButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                var tabId = this.getAttribute('data-tab');
+                switchTab(tabId);
+                });
+                });
+                });
+            </script>
+
+
+        </t>
+    </template>
+
+    <template id="form_submission_success" name="Form Submission Success">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5" style="min-height: 70vh;">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10 col-sm-12">
+                        <div style="background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); text-align: center;">
+                            <h1 style="color: #28a745; font-size: 2rem;">🎉 Application Submitted Successfully!</h1>
+                            <p style="font-size: 1.1rem; margin: 15px 0 25px 0;">
+                                Your record has been saved. <br/> Team will respond you in 3-5 working days.<br/>
+                                <strong>Application No# <t t-esc="record_id"/></strong>
+                            </p>
+                            <a href="/" class="btn"
+                               style="background-color: #000; color: #fff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 1rem;">
+                                ⬅ Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+</odoo>

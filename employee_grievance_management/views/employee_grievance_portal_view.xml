@@ -1,0 +1,319 @@
+<odoo>
+    <template id="portal_employee_grievance_request" name="Portal My Home : Employee Grievance Request"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+                background-color: #ffe4e1; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/employee/grievance/portal'"
+                       style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Grievance Portal
+                            </h4>
+
+                            <t t-set="grievance_count"
+                               t-value="request.env['emp.grievance'].sudo().search_count([])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">Total Submitted
+                                    Grievances</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="grievance_count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="employee_grievance_portal_form_id" name="Grievance Form">
+        <t t-call="website.layout">
+            <t t-set="title">Employee Grievance Form</t>
+            <style>
+                /* -------------------------- NavBar Code Started Here ---------------------- */
+
+                .modern-nav-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 15px 0;
+                    backdrop-filter: blur(10px);
+                    background: rgba(61, 61, 82, 0.8);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modern-nav {
+                    width: 100%;
+                    max-width: 1200px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 30px;
+                }
+
+                .nav-logo {
+                    position: relative;
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .logo-glow {
+                    position: absolute;
+                    width: 100%;
+                    height: 5px;
+                    bottom: -5px;
+                    left: 0;
+                    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+                    filter: blur(3px);
+                    animation: glow-pulse 3s infinite;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 10px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .nav-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+                    transition: all 0.5s ease;
+                }
+
+                .nav-link:hover {
+                    background: rgba(0, 212, 255, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .nav-link:hover::before {
+                    left: 100%;
+                }
+
+                .nav-icon {
+                    font-size: 1.2em;
+                }
+
+                .nav-text {
+                    position: relative;
+                }
+
+                .nav-text::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -4px;
+                    left: 0;
+                    background-color: #00d4ff;
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover .nav-text::after {
+                    width: 100%;
+                }
+
+                @keyframes glow-pulse {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.5;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .modern-nav {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+
+                    .nav-links {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
+
+                /* -------------------------- NavBar Code Ended Here ---------------------- */
+
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    color: #fff;
+                    background: #1a1a2e;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .warranty-claim-container {
+                    max-width: 900px;
+                    background: rgba(0, 0, 0, 0.4);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+                    margin: 50px auto;
+                    text-align: left;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .warranty-claim-container h2 {
+                    text-align: center;
+                    color: #fff;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+
+                .form-group {
+                    margin-bottom: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                }
+
+                .form-group span {
+                    flex: 1;
+                }
+
+                .form-group label {
+                    font-weight: bold;
+                    display: block;
+                    color: #fff;
+                    margin-bottom: 5px;
+                }
+
+                .form-control {
+                    background: #fff;
+                    color: #000;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 8px;
+                    padding: 10px;
+                    font-size: 16px;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .form-control::placeholder {
+                    color: #888;
+                }
+
+                input[type="file"] {
+                    width: 100%;
+                }
+
+                .btn-primary {
+                    background: #8A4AF3;
+                    border: none;
+                    padding: 12px;
+                    font-size: 18px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    width: 100%;
+                    color: #fff;
+                    transition: background 0.3s ease-in-out;
+                }
+
+                .btn-primary:hover {
+                    background: #6B3FCC;
+                }
+            </style>
+
+            <!-- Navigation Bar HTML -->
+            <div class="modern-nav-container">
+                <nav class="modern-nav">
+                    <div class="nav-logo">
+                        <span>Lodge &amp; Monitor Grievance</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <ul class="nav-links">
+                        <li>
+                            <a href="/employee/grievance/portal" class="nav-link">
+                                <span class="nav-icon">📨</span>
+                                <span class="nav-text">Submit Complaint</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/employee/grievance/portal/status" class="nav-link">
+                                <span class="nav-icon">📊</span>
+                                <span class="nav-text">Track Status</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="warranty-claim-container">
+                <form action="/employee/grievance/portal" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <h2>Start Grievance Application</h2>
+                    <div class="form-group">
+                        <span>
+                            <label>Grievance Type *</label>
+                            <select name="complaint_type" class="form-control" required="required">
+                                <option value="">Select Type</option>
+                                <t t-foreach="grievance_types" t-as="type">
+                                    <option t-att-value="type['id']">
+                                        <t t-esc="type['name']"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </span>
+
+                        <span>
+                            <label for="description">Description</label>
+                            <input type="text" name="description" id="description" class="form-control"
+                                   required="0" placeholder="Enter description name"/>
+                        </span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <span>
+                            <label>Document Upload</label>
+                            <input type="file" name="attachment_file" class="form-control" multiple="1"/>
+                        </span>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Grievance</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

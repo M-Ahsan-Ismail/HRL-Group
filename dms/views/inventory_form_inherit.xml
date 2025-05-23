@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inventory_form_inherit" model="ir.ui.view">
+            <field name="name">.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <span class="d-inline-block">
+                        <field name="is_vehicle" string="Is Vehicle"/>
+                        <label for="is_vehicle"/>
+                        <field name="is_spare_part"/>
+                        <label for="is_spare_part"/>
+                    </span>
+                </xpath>
+
+                <xpath expr="//group[1]" position="inside">
+                    <group string="Vehicle Details" invisible="is_vehicle == False">
+                        <field name="model_name" widget="char" invisible="is_vehicle == False"/>
+                        <field name="fuel_type" widget="selection_badge" invisible="is_vehicle == False"/>
+                        <field name="code" widget="char" invisible="is_vehicle == False"/>
+                        <field name="launch_year" widget="date" invisible="is_vehicle == False"/>
+                        <field name="body_type" widget="selection_badge" invisible="is_vehicle == False"/>
+                        <field name="seating_capacity" widget="integer" invisible="is_vehicle == False"/>
+                    </group>
+                    <group string="Engine Details">
+                        <field name="model_variant_id"/>
+                        <field name="engine_size"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="color_code"/>
+                        <field name="transmission_type" widget="selection_badge"/>
+                        <field name="feature_ids" widget="many2many_tags"/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//group[1]" position="inside">
+                    <group string="Parts Details" invisible="is_spare_part == False">
+                        <field name="spare_part_name" widget="char" invisible="is_spare_part == False"/>
+                        <field name="part_number" invisible="is_spare_part == False"/>
+                        <field name="spare_part_type" widget="selection_badge" invisible="is_spare_part == False"/>
+                        <field name="compatible_model_ids" widget="many2many_tags" invisible="is_spare_part == False"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem
+                id="inventory_dms_main_menu"
+                name="DMS"
+                parent="stock.menu_stock_config_settings"
+                sequence="55"/>
+
+        <menuitem
+                id="inventory_brands_menu"
+                name="Brands"
+                parent="inventory_dms_main_menu"
+                action="dms_brand_action"
+                sequence="60"/>
+        <menuitem
+                id="inventory_brand_models_menu"
+                name="Models"
+                parent="inventory_dms_main_menu"
+                action="brand_models_action"
+                sequence="65"/>
+    </data>
+</odoo>

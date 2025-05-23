@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_cron_warranty_expiry" model="ir.cron">
+        <field name="name">Check Warranty Expiry</field>
+        <field name="model_id" ref="model_sales_warranty"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall"
+               eval="(DateTime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="code">model.cron_job_change_warranty()</field>
+    </record>
+
+
+    <record id="sales_warranty_sequence_id" model="ir.sequence">
+        <field name="name">Sales Warranty Sequence</field>
+        <field name="code">sales.warranty.sequence</field>
+        <field name="prefix">WRNTY-%(year)s-</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+
+    <record id="sales_warranty_form_view" model="ir.ui.view">
+        <field name="name">sales.warranty.form</field>
+        <field name="model">sales.warranty</field>
+        <field name="arch" type="xml">
+            <form string="Sales Warranty">
+                <header>
+                    <button name="action_reset_warranty" string="Reset TO Draft" class="oe_highlight" type="object"
+                            invisible="state=='in_warranty'"/>
+                    <button name="force_expire" string="Force Expire" class="oe_drop_zone_danger" type="object"
+                            invisible="state=='expired'"/>
+                    <button name="send_warranty_email" string="Send By Email" class="oe_mail_expand" type="object"
+                            invisible="state=='expired'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="in_warranty,expired"/>
+                </header>
+
+                <sheet>
+                    <widget name="web_ribbon" title="Expired" bg_color="text-bg-danger"
+                            invisible="state != 'expired'"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_related_sale_order" type="object" class="oe_stat_button"
+                                icon="fa-shopping-cart">
+                            <div class="o_stat_info">
+                                <field name="sale_order_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Sale Orders</span>
+                            </div>
+                        </button>
+                    </div>
+
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Warranty Information" col="2">
+                            <field name="sale_order_id" options="{'no_create': True}" readonly="1"/>
+                            <field name="customer_id" options="{'no_create': True}" readonly="1"/>
+                            <field name="product_id" options="{'no_create': True}" readonly="1"/>
+                        </group>
+
+                        <group string="Warranty Period" col="2">
+                            <field name="date_of_purchase" readonly="1"/>
+                            <field name="warranty_period" placeholder="e.g. 12 for 12 months" readonly="1"/>
+                            <field name="warranty_end_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group col="2" string="Terms &amp; Conditions">
+                            <field name="terms_condition_id"/>
+                            <field name="warranty_include_id"/>
+                            <field name="warranty_exclude_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Additional Notes">
+                            <field name="notes" placeholder="Add any additional notes or observations here..."
+                                   nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True"/>
+
+
+            </form>
+        </field>
+    </record>
+
+    <record id="sales_warranty_tree_view" model="ir.ui.view">
+        <field name="name">sales.warranty.list</field>
+        <field name="model">sales.warranty</field>
+        <field name="arch" type="xml">
+            <list string="Sales Warranties">
+                <field name="sale_order_id"/>
+                <field name="customer_id"/>
+                <field name="product_id"/>
+                <field name="date_of_purchase"/>
+                <field name="warranty_end_date"/>
+                <field name="warranty_period"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sales_warranty_kanban_view" model="ir.ui.view">
+        <field name="name">sales.warranty.kanban</field>
+        <field name="model">sales.warranty</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile" create="true" quick_create="true">
+                <field name="state"/>
+                <field name="name"/>
+                <field name="sale_order_id"/>
+                <field name="warranty_end_date"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_card_header">
+                                <div class="oe_kanban_card_header_title">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                </div>
+                                <div class="oe_kanban_card_header_status">
+                                    <span t-att-class="'badge badge-' + (record.state.value == 'in_warranty' ? 'success' : 'danger')">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_card_content">
+                                <field name="sale_order_id" widget="many2one" options="{'no_open': True}"/>
+                                <div class="text-muted">
+                                    <strong>End Date:</strong> <field name="warranty_end_date"/>
+                                </div>
+                                <div t-if="record.active.value == False" class="text-warning">
+                                    <small>Inactive</small>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_card_footer">
+                                <button name="force_expire" type="object" class="btn btn-sm btn-danger"
+                                        t-if="record.state.value == 'in_warranty'">
+                                    Expire Warranty
+                                </button>
+                                <button name="action_view_related_sale_order" type="object"
+                                        class="btn btn-sm btn-primary">
+                                    View Sale Order
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="sales_warranty_search_view" model="ir.ui.view">
+        <field name="name">sales.warranty.search</field>
+        <field name="model">sales.warranty</field>
+        <field name="arch" type="xml">
+            <search string="Sales Warranties">
+                <field name="sale_order_id"/>
+                <field name="customer_id"/>
+                <field name="product_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Expired Warranties" name="active" domain="[('active','=',False)]"/>
+                    <filter string="Customer" name="customer_id" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Product" name="order_product_id" context="{'group_by': 'product_id'}"/>
+                    <filter string="Date of Purchase" name="date_of_purchase"
+                            context="{'group_by': 'date_of_purchase'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+</odoo>

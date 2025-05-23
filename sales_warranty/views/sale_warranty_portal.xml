@@ -1,0 +1,589 @@
+<odoo>
+    <template id="portal_sales_warranty_portal" name="Portal My Home : Sales Warranty Portal"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e); color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/warranty/check'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #ffffff; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Dealer Warranties
+                                <img src="/sales_warranty/static/description/portal_icon.png" alt="Check-in Icon"
+                                     style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['sales.warranty'].sudo().search_count([('state','=','in_warranty')])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #ffffff; text-align: center;">Total Warranties
+
+                                </span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #84c1ff;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="WarrantyCheckTemplate" name="Warranty Check">
+        <t t-call="website.layout">
+
+
+            <!-- Navigation Bar HTML -->
+            <div class="modern-nav-container">
+                <nav class="modern-nav">
+                    <div class="nav-logo">
+                        <span>Warranty &amp; Claim</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="/warranty/check" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Warranty Status</span>
+                        </a></li>
+                        <li><a href="/warranty/claim/request" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">Claim Warranty</span>
+                        </a></li>
+                        <li><a href="/warranty/claim/status" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Claim Status</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+
+
+            <div class="oe_structure">
+                <div class="warranty-portal-container">
+                    <div class="warranty-header">
+                        <h1 class="warranty-title">Check Warranty Status</h1>
+                        <div class="warranty-glow"></div>
+                    </div>
+
+
+                    <t t-if="not data">
+                        <div class="warranty-form">
+                            <form method="GET" action="/warranty/check">
+                                <div class="form-group">
+                                    <label for="warranty_id" class="form-label">Enter Warranty ID:</label>
+                                    <input type="text" name="warranty_id" id="warranty_id" class="form-control"
+                                           t-att-value="warranty_id" placeholder="e.g., WARRANTY-001"
+                                           required="required"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary check-btn">Check Warranty</button>
+                            </form>
+                        </div>
+                    </t>
+
+
+                    <t t-if="data">
+                        <t t-foreach="data" t-as="warranty">
+                            <div class="warranty-card mt-4">
+                                <div class="card-header">
+                                    <h2 class="card-title">Product</h2>
+                                </div>
+                                <div class="card-content">
+                                    <div class="warranty-info">
+                                        <div class="info-item">
+                                            <span class="info-label">Product:</span>
+                                            <span class="info-value" t-esc="warranty['product_name']"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-foreach="data" t-as="warranty">
+                            <div class="warranty-card mt-4">
+                                <div class="card-header">
+                                    <h2 class="card-title">Warranty Details</h2>
+                                </div>
+                                <div class="card-content">
+                                    <div class="warranty-info">
+                                        <div class="info-item">
+                                            <span class="info-label">Warranty ID:</span>
+                                            <span class="info-value" t-esc="warranty['name']"/>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Status:</span>
+                                            <span t-if="warranty['status'] == 'active'"
+                                                  class="info-value status-active">Active</span>
+                                            <span t-elif="warranty['status'] == 'in_warranty'"
+                                                  class="info-value status-active">Active</span>
+                                            <span t-elif="warranty['status'] == 'expired'"
+                                                  class="info-value status-expired">Expired</span>
+                                            <span t-else="" class="info-value" t-esc="warranty['status']"/>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Sale Order:</span>
+                                            <span class="info-value" t-esc="warranty['sale_order_number']"/>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Date of Purchase:</span>
+                                            <span class="info-value" t-esc="warranty['date_of_purchase']"/>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Warranty End Date:</span>
+                                            <span class="info-value" t-esc="warranty['warranty_end_date']"/>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Remaining Months:</span>
+                                            <span class="info-value" t-esc="warranty['remaining_months']"/>
+                                        </div>
+                                    </div>
+                                    <div class="warranty-visual">
+                                        <div class="progress-circle"
+                                             t-att-data-progress="warranty['remaining_value']">
+                                            <svg width="150" height="150">
+                                                <circle cx="75" cy="75" r="60" class="progress-bg"></circle>
+                                                <circle cx="75" cy="75" r="60" class="progress-bar"></circle>
+                                            </svg>
+                                            <div class="progress-text">
+                                                <span t-esc="warranty['remaining_value']"/>%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+
+                </div>
+
+
+            </div>
+
+            <style>
+
+                /* -------------------------- NavBar Code Started Here ---------------------- */
+
+                .modern-nav-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 15px 0;
+                    backdrop-filter: blur(10px);
+                    background: rgba(26, 26, 46, 0.8);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modern-nav {
+                    width: 100%;
+                    max-width: 1200px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 30px;
+                }
+
+                .nav-logo {
+                    position: relative;
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .logo-glow {
+                    position: absolute;
+                    width: 100%;
+                    height: 5px;
+                    bottom: -5px;
+                    left: 0;
+                    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+                    filter: blur(3px);
+                    animation: glow-pulse 3s infinite;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 10px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .nav-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+                    transition: all 0.5s ease;
+                }
+
+                .nav-link:hover {
+                    background: rgba(0, 212, 255, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .nav-link:hover::before {
+                    left: 100%;
+                }
+
+                .nav-icon {
+                    font-size: 1.2em;
+                }
+
+                .nav-text {
+                    position: relative;
+                }
+
+                .nav-text::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -4px;
+                    left: 0;
+                    background-color: #00d4ff;
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover .nav-text::after {
+                    width: 100%;
+                }
+
+                @keyframes glow-pulse {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.5;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .modern-nav {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+
+                    .nav-links {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
+
+                /* -------------------------- NavBar Code Ended Here ---------------------- */
+
+
+                .warranty-portal-container {
+                    background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    min-height: 80vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 50px 20px;
+                    color: #fff;
+                    font-family: 'Arial', sans-serif;
+                }
+
+                .warranty-header {
+                    position: relative;
+                    text-align: center;
+                    margin-bottom: 40px;
+                }
+
+                .warranty-title {
+                    font-size: 2.8em;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    color: #ffffff;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7), 0 0 20px rgba(0, 212, 255, 0.5);
+                    margin-bottom: 10px;
+                }
+
+                .warranty-glow {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 300px;
+                    height: 300px;
+                    background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+                    transform: translate(-50%, -50%);
+                    z-index: -1;
+                    animation: glow 3s infinite alternate;
+                }
+
+                @keyframes glow {
+                    from {
+                        opacity: 0.5;
+                        width: 250px;
+                        height: 250px;
+                    }
+                    to {
+                        opacity: 1;
+                        width: 300px;
+                        height: 300px;
+                    }
+                }
+
+                .warranty-form {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                    backdrop-filter: blur(10px);
+                    width: 100%;
+                    max-width: 500px;
+                    margin-bottom: 30px;
+                }
+
+                .form-label {
+                    color: #ffffff;
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    margin-bottom: 10px;
+                    display: block;
+                }
+
+                .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(0, 212, 255, 0.3);
+                    color: #fff;
+                    padding: 12px 15px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                    transition: all 0.3s ease;
+                }
+
+                .form-control:focus {
+                    border-color: #00d4ff;
+                    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.3);
+                    outline: none;
+                }
+
+                .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                .check-btn {
+                    background: linear-gradient(45deg, #00d4ff, #05a3ff);
+                    border: none;
+                    color: #fff;
+                    padding: 12px 25px;
+                    border-radius: 8px;
+                    font-size: 1.1em;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+                    width: 100%;
+                }
+
+                .check-btn:hover {
+                    background: linear-gradient(45deg, #05a3ff, #00d4ff);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+                }
+
+                .warranty-card {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    width: 100%;
+                    max-width: 600px;
+                    backdrop-filter: blur(10px);
+                    overflow: hidden;
+                    border: 1px solid rgba(0, 212, 255, 0.2);
+                }
+
+                .card-header {
+                    background: rgba(0, 212, 255, 0.2);
+                    padding: 15px 30px;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+                }
+
+                .card-title {
+                    color: #ffffff;
+                    margin: 0;
+                    font-size: 1.8em;
+                    font-weight: 600;
+                    text-align: center;
+                }
+
+                .card-content {
+                    padding: 30px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                }
+
+                .warranty-info {
+                    flex: 1;
+                    margin-right: 20px;
+                    min-width: 250px;
+                }
+
+                .info-item {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 18px;
+                    font-size: 1.1em;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-bottom: 10px;
+                }
+
+                .info-item:last-child {
+                    border-bottom: none;
+                    margin-bottom: 0;
+                }
+
+                .info-label {
+                    color: #ffffff;
+                    font-weight: 600;
+                }
+
+                .info-value {
+                    color: #fff;
+                    font-weight: 500;
+                }
+
+                .status-active {
+                    color: #00ff88;
+                    font-weight: 700;
+                }
+
+                .status-expired {
+                    color: #ff5555;
+                    font-weight: 700;
+                }
+
+                .warranty-visual {
+                    flex: 0 0 auto;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                }
+
+                .progress-circle {
+                    position: relative;
+                    width: 150px;
+                    height: 150px;
+                }
+
+                .progress-circle svg {
+                    transform: rotate(-90deg);
+                }
+
+                .progress-bg {
+                    fill: none;
+                    stroke: rgba(255, 255, 255, 0.1);
+                    stroke-width: 12;
+                }
+
+                .progress-bar {
+                    fill: none;
+                    stroke: #00d4ff;
+                    stroke-width: 12;
+                    stroke-linecap: round;
+                    stroke-dasharray: 377;
+                    stroke-dashoffset: 377; /* Will be updated by JS */
+                    transition: stroke-dashoffset 2s ease-out;
+                    filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.7));
+                }
+
+                .progress-text {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 2em;
+                    font-weight: 700;
+                    color: #00d4ff;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+                }
+
+                @media (max-width: 768px) {
+                    .card-content {
+                        flex-direction: column;
+                    }
+
+                    .warranty-info {
+                        margin-right: 0;
+                        margin-bottom: 30px;
+                        width: 100%;
+                    }
+
+                    .warranty-title {
+                        font-size: 2.2em;
+                    }
+
+                    .card-title {
+                        font-size: 1.5em;
+                    }
+
+                    .info-item {
+                        font-size: 1em;
+                    }
+                }
+            </style>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                const circles = document.querySelectorAll('.progress-circle');
+                circles.forEach(circle => {
+                const progressElement = circle.querySelector('.progress-bar');
+                const radius = progressElement.getAttribute('r');
+                const circumference = 2 * Math.PI * radius;
+
+                // Set the initial dasharray to the circumference
+                progressElement.style.strokeDasharray = circumference;
+
+                // Get the progress value from the data attribute
+                const progress = parseInt(circle.dataset.progress) || 0;
+
+                // Calculate the dashoffset based on the progress
+                const dashoffset = circumference - (progress / 100) * circumference;
+
+                // Apply the dashoffset with a slight delay for animation effect
+                setTimeout(() => {
+                progressElement.style.strokeDashoffset = dashoffset;
+                }, 300);
+                });
+                });
+            </script>
+        </t>
+    </template>
+
+</odoo>

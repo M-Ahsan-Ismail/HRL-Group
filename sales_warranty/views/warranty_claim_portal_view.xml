@@ -1,0 +1,301 @@
+<odoo>
+    <template id="warranty_claim_portal_form" name="Warranty Claim Form">
+        <t t-call="website.layout">
+            <t t-set="title">Warranty Claim Form</t>
+            <style>
+                /* -------------------------- NavBar Code Started Here ---------------------- */
+
+                .modern-nav-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 15px 0;
+                    backdrop-filter: blur(10px);
+                    background: rgba(82, 82, 101, 0.8);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    border-bottom: 1px solid rgba(161, 208, 255, 0.2);
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modern-nav {
+                    width: 100%;
+                    max-width: 1200px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 30px;
+                }
+
+                .nav-logo {
+                    position: relative;
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .logo-glow {
+                    position: absolute;
+                    width: 100%;
+                    height: 5px;
+                    bottom: -5px;
+                    left: 0;
+                    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+                    filter: blur(3px);
+                    animation: glow-pulse 3s infinite;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 10px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .nav-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+                    transition: all 0.5s ease;
+                }
+
+                .nav-link:hover {
+                    background: rgba(0, 212, 255, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .nav-link:hover::before {
+                    left: 100%;
+                }
+
+                .nav-icon {
+                    font-size: 1.2em;
+                }
+
+                .nav-text {
+                    position: relative;
+                }
+
+                .nav-text::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -4px;
+                    left: 0;
+                    background-color: #00d4ff;
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover .nav-text::after {
+                    width: 100%;
+                }
+
+                @keyframes glow-pulse {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.5;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .modern-nav {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+
+                    .nav-links {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
+
+                /* -------------------------- NavBar Code Ended Here ---------------------- */
+
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    color: #fff;
+                    background: #1a1a2e;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .warranty-claim-container {
+                    max-width: 900px;
+                    background: rgba(0, 0, 0, 0.4);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+                    margin: 50px auto;
+                    text-align: left;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .warranty-claim-container h2 {
+                    text-align: center;
+                    color: #fff;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+
+                .form-group {
+                    margin-bottom: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                }
+
+                .form-group span {
+                    flex: 1;
+                }
+
+                .form-group label {
+                    font-weight: bold;
+                    display: block;
+                    color: #fff;
+                    margin-bottom: 5px;
+                }
+
+                .form-control {
+                    background: #fff;
+                    color: #000;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 8px;
+                    padding: 10px;
+                    font-size: 16px;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .form-control::placeholder {
+                    color: #888;
+                }
+
+                input[type="file"] {
+                    width: 100%;
+                }
+
+                .btn-primary {
+                    background: #8A4AF3;
+                    border: none;
+                    padding: 12px;
+                    font-size: 18px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    width: 100%;
+                    color: #fff;
+                    transition: background 0.3s ease-in-out;
+                }
+
+                .btn-primary:hover {
+                    background: #6B3FCC;
+                }
+            </style>
+            <!-- Navigation Bar HTML -->
+            <div class="modern-nav-container">
+                <nav class="modern-nav">
+                    <div class="nav-logo">
+                        <span>Warranty &amp; Claim</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="/warranty/check" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Warranty Status</span>
+                        </a></li>
+                        <li><a href="/warranty/claim/request" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">Claim Warranty</span>
+                        </a></li>
+                        <li><a href="/warranty/claim/status" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Claim Status</span>
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+
+
+            <div class="warranty-claim-container">
+                <form action="/warranty/claim/request" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <h2>Start Your Warranty Claim</h2>
+                    <div class="form-group">
+                        <span>
+                            <label for="customer_id">Customer</label>
+                            <input type="text" name="customer_id" id="customer_id" class="form-control"
+                                   required="0" placeholder="Enter customer name"/>
+                        </span>
+                        <span>
+                            <label for="product_id">Product</label>
+                            <input type="text" name="product_id" id="product_id" class="form-control"
+                                   required="0" placeholder="Enter product name"/>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <span>
+                            <label>Product Image</label>
+                            <input type="file" name="image_1920" class="form-control" accept="image/*"/>
+                        </span>
+                        <span>
+                            <label>Issue Description</label>
+                            <input type="text" name="description" class="form-control"
+                                   placeholder="Enter issue description here"/>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <!--                        <span>-->
+                        <!--                            <label>Document Upload</label>-->
+                        <!--                            <input type="file" name="attachment_file" class="form-control" multiple="1"/>-->
+                        <!--                        </span>-->
+                        <span>
+                            <label>Warranty Number</label>
+                            <input type="text" name="warranty_number_id" class="form-control"
+                                   placeholder="Enter warranty number here" required="1"/>
+                        </span>
+                        <span>
+                            <label>Claim Date</label>
+                            <input type="date" name="claim_date" class="form-control" required="1"/>
+                        </span>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Claim</button>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,764 @@
+<odoo>
+    <template id="grievance_status_tracking_id" name="Grievance Tracking">
+        <t t-call="website.layout">
+            <!-- Navigation Bar HTML -->
+            <div class="modern-nav-container">
+                <nav class="modern-nav">
+                    <div class="nav-logo">
+                        <span>Lodge &amp; Monitor Grievance</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <ul class="nav-links">
+                        <li>
+                            <a href="/employee/grievance/portal" class="nav-link">
+                                <span class="nav-icon">📨</span>
+                                <span class="nav-text">Submit Complaint</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/employee/grievance/portal/status" class="nav-link">
+                                <span class="nav-icon">📊</span>
+                                <span class="nav-text">Track Status</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="oe_structure">
+                <div class="application-portal-container">
+                    <!-- Banner Header -->
+                    <div class="application-header">
+                        <h1 class="application-title">Track Complaint Status</h1>
+                        <div class="application-glow"></div>
+                    </div>
+
+                    <!-- Search Form (shown when no grievance_data is available) -->
+                    <t t-if="not grievance_data">
+                        <div class="application-form">
+                            <form method="GET" action="/employee/grievance/portal/status">
+                                <div class="form-group">
+                                    <label for="grievance_id" class="form-label">Enter Complaint ID:</label>
+                                    <input type="text" name="grievance_id" id="grievance_id"
+                                           class="form-control"
+                                           placeholder="e.g., GRV/-" required="required"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary track-btn">Track Status</button>
+                            </form>
+                        </div>
+                    </t>
+
+                    <!-- Results Display -->
+                    <t t-if="grievance_data">
+                        <t t-foreach="grievance_data" t-as="application">
+                            <!-- Status Tracker Card -->
+                            <div class="status-tracker-card">
+                                <div class="card-header">
+                                    <h2 class="card-title"><t t-esc="application['name']"/></h2>
+                                </div>
+
+                                <!-- Status Timeline -->
+                                <div class="status-timeline">
+                                    <div class="timeline-container">
+                                        <div class="timeline-states">
+                                            <!-- Only highlight the current state -->
+                                            <div t-attf-class="state-item #{application['status'] == 'new' and 'active' or ''}">
+                                                <div class="state-marker"></div>
+                                                <span class="state-label">Submitted</span>
+                                            </div>
+                                            <div t-attf-class="state-item #{application['status'] == 'in_review' and 'active' or ''}">
+                                                <div class="state-marker"></div>
+                                                <span class="state-label">Investigating</span>
+                                            </div>
+                                            <div t-attf-class="state-item #{application['status'] == 'resolved' and 'active' or ''}">
+                                                <div class="state-marker"></div>
+                                                <span class="state-label">Resolved</span>
+                                            </div>
+
+                                            <div t-attf-class="state-item #{application['status'] == 'closed' and 'rejected' or ''}">
+                                                <div class="state-marker"></div>
+                                                <span class="state-label">Closed</span>
+                                            </div>
+                                        </div>
+                                        <div class="timeline-progress-bar">
+                                            <!-- Fixed progress fill to only show up to current state -->
+                                            <div t-attf-class="progress-fill progress-#{application['status']}"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="current-status">
+                                        <span class="status-label">Current Status:</span>
+                                        <span t-attf-class="status-value status-#{application['status']}">
+                                            <t t-if="application['status'] == 'new'">Submitted</t>
+                                            <t t-elif="application['status'] == 'in_review'">Investigating</t>
+                                            <t t-elif="application['status'] == 'resolved'">Resolved</t>
+                                            <t t-elif="application['status'] == 'closed'">Closed</t>
+                                            <t t-else=""><t t-esc="application['state']"/></t>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Applicant Details -->
+                                <div class="applicant-details">
+                                    <div class="details-header" style="text-align:left;">
+                                        <h3>Grievance Details</h3>
+                                    </div>
+
+                                    <div class="details-content">
+                                        <div class="applicant-profile">
+                                            <div class="profile-image">
+                                                <img t-if="application['image_1920']"
+                                                     t-att-src="'data:image/png;base64,' + application['image_1920']"
+                                                     alt="Profile"/>
+                                                <div t-else="" class="no-image">
+                                                    <i class="fa fa-user-circle"></i>
+                                                </div>
+                                            </div>
+                                            <div class="profile-name">
+                                                <h4 t-esc="application['complainant_name']"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="applicant-info">
+                                            <div class="info-columns">
+                                                <div class="info-column">
+                                                    <div class="info-item">
+                                                        <span class="info-label">Complain Type:</span>
+                                                        <span class="info-value" t-esc="application['type']"/>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <span class="info-label">Submission Date:</span>
+                                                        <span class="info-value" t-esc="application['date']"/>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <span class="info-label">Description:</span>
+                                                        <span class="info-value" t-esc="application['description']"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </div>
+
+            <style>
+                /* -------------------------- NavBar Code Started Here ---------------------- */
+
+                .modern-nav-container {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 15px 0;
+                    backdrop-filter: blur(10px);
+                    background: rgba(26, 26, 46, 0.8);
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .modern-nav {
+                    width: 100%;
+                    max-width: 1200px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0 30px;
+                }
+
+                .nav-logo {
+                    position: relative;
+                    font-size: 1.8em;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .logo-glow {
+                    position: absolute;
+                    width: 100%;
+                    height: 5px;
+                    bottom: -5px;
+                    left: 0;
+                    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+                    filter: blur(3px);
+                    animation: glow-pulse 3s infinite;
+                }
+
+                .nav-links {
+                    display: flex;
+                    gap: 10px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: 500;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .nav-link::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+                    transition: all 0.5s ease;
+                }
+
+                .nav-link:hover {
+                    background: rgba(0, 212, 255, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+
+                .nav-link:hover::before {
+                    left: 100%;
+                }
+
+                .nav-icon {
+                    font-size: 1.2em;
+                }
+
+                .nav-text {
+                    position: relative;
+                }
+
+                .nav-text::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: -4px;
+                    left: 0;
+                    background-color: #00d4ff;
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover .nav-text::after {
+                    width: 100%;
+                }
+
+                @keyframes glow-pulse {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                    100% {
+                        opacity: 0.5;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .modern-nav {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+
+                    .nav-links {
+                        width: 100%;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                    }
+                }
+
+
+                /* -------------------------- NavBar Code Ended Here ---------------------- */
+
+                /* Main Container */
+                .application-portal-container {
+                    background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    min-height: 80vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 50px 20px;
+                    color: #fff;
+                    font-family: 'Arial', sans-serif;
+                }
+
+                /* Header Section */
+                .application-header {
+                    position: relative;
+                    text-align: center;
+                    margin-bottom: 40px;
+                    width: 100%;
+                }
+
+                .application-title {
+                    font-size: 2.8em;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    color: #ffffff;
+                    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7), 0 0 20px rgba(0, 212, 255, 0.5);
+                    margin-bottom: 10px;
+                }
+
+                .application-glow {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 300px;
+                    height: 300px;
+                    background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+                    transform: translate(-50%, -50%);
+                    z-index: -1;
+                    animation: glow 3s infinite alternate;
+                }
+
+                @keyframes glow {
+                    from {
+                        opacity: 0.5;
+                        width: 250px;
+                        height: 250px;
+                    }
+                    to {
+                        opacity: 1;
+                        width: 300px;
+                        height: 300px;
+                    }
+                }
+
+                /* Form Section */
+                .application-form {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                    backdrop-filter: blur(10px);
+                    width: 100%;
+                    max-width: 500px;
+                    margin-bottom: 30px;
+                    border: 1px solid rgba(0, 212, 255, 0.2);
+                }
+
+                .form-label {
+                    color: #ffffff;
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    margin-bottom: 10px;
+                    display: block;
+                }
+
+                .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(0, 212, 255, 0.3);
+                    color: #fff;
+                    padding: 12px 15px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    font-size: 1.1em;
+                    transition: all 0.3s ease;
+                }
+
+                .form-control:focus {
+                    border-color: #00d4ff;
+                    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.3);
+                    outline: none;
+                }
+
+                .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                .track-btn {
+                    background: linear-gradient(45deg, #00d4ff, #05a3ff);
+                    border: none;
+                    color: #fff;
+                    padding: 12px 25px;
+                    border-radius: 8px;
+                    font-size: 1.1em;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+                    width: 100%;
+                }
+
+                .track-btn:hover {
+                    background: linear-gradient(45deg, #05a3ff, #00d4ff);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+                }
+
+                /* Status Tracker Card */
+                .status-tracker-card {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    width: 100%;
+                    max-width: 900px;
+                    backdrop-filter: blur(10px);
+                    overflow: hidden;
+                    border: 1px solid rgba(0, 212, 255, 0.2);
+                    margin-bottom: 30px;
+                }
+
+                .card-header {
+                    background: rgba(0, 212, 255, 0.2);
+                    padding: 20px 30px;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .card-title {
+                    color: #ffffff;
+                    margin: 0;
+                    font-size: 1.8em;
+                    font-weight: 600;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                /* Status Timeline */
+                .status-timeline {
+                    padding: 30px;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                }
+
+                .timeline-container {
+                    margin-bottom: 20px;
+                }
+
+                .timeline-states {
+                    display: flex;
+                    justify-content: space-between;
+                    position: relative;
+                    margin-bottom: 15px;
+                }
+
+                .state-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 20%;
+                    position: relative;
+                    opacity: 0.6;
+                    transition: all 0.3s ease;
+                }
+
+                .state-item.active {
+                    opacity: 1;
+                }
+
+                .state-item.rejected {
+                    opacity: 1;
+                }
+
+                .state-marker {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.3);
+                    margin-bottom: 10px;
+                    z-index: 2;
+                    transition: all 0.3s ease;
+                }
+
+                .state-item.active .state-marker {
+                    background: #00d4ff;
+                    box-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+                }
+
+                .state-item.rejected .state-marker {
+                    background: #ff5555;
+                    box-shadow: 0 0 10px rgba(255, 85, 85, 0.7);
+                }
+
+                .state-label {
+                    font-size: 0.9em;
+                    text-align: center;
+                    color: rgba(255, 255, 255, 0.8);
+                }
+
+                .state-item.active .state-label {
+                    color: #00d4ff;
+                    font-weight: 600;
+                }
+
+                .state-item.rejected .state-label {
+                    color: #ff5555;
+                    font-weight: 600;
+                }
+
+                .timeline-progress-bar {
+                    height: 6px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 3px;
+                    position: relative;
+                    margin-top: 0px; /* Position behind the markers */
+                }
+
+                .progress-fill {
+                    height: 100%;
+                    border-radius: 3px;
+                    background: linear-gradient(90deg, #00d4ff, #05a3ff);
+                    width: 100%; /* Highlight the entire bar */
+                    transition: none; /* Remove transition since it's always 100% */
+                    position: relative;
+                    box-shadow: 0 0 10px rgba(0, 212, 255, 0.7); /* Add glow effect for highlight */
+                }
+
+                .progress-completed {
+                    width: 75%; /* Width to show progress up to completed */
+                }
+
+
+                .current-status {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 30px;
+                    background: rgba(255, 255, 255, 0.05);
+                    padding: 15px;
+                    border-radius: 10px;
+                }
+
+                .status-label {
+                    font-size: 1.2em;
+                    color: rgba(255, 255, 255, 0.8);
+                    margin-right: 10px;
+                }
+
+                .status-value {
+                    font-size: 1.2em;
+                    font-weight: 700;
+                    padding: 5px 15px;
+                    border-radius: 20px;
+                    background: rgba(0, 0, 0, 0.2);
+                }
+
+                .status-new {
+                    color: #ffcc00;
+                }
+
+                .status-in_review {
+                    color: #73ffff;
+                }
+
+                .status-resolved {
+                    color: #00ff88;
+                }
+
+                .status-closed {
+                    color: #ff5555;
+                }
+
+                /* Applicant Details */
+                .applicant-details {
+                    padding: 30px;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                }
+
+                .details-header h3 {
+                    color: #ffffff;
+                    font-size: 1.5em;
+                    margin-top: 0;
+                    margin-bottom: 20px;
+                    font-weight: 600;
+                }
+
+                .details-content {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .applicant-profile {
+                    flex: 0 0 200px;
+                    text-align: center;
+                    margin-right: 30px;
+                    margin-bottom: 20px;
+                }
+
+                .profile-image {
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 60px;
+                    overflow: hidden;
+                    margin: 0 auto 15px;
+                    border: 3px solid rgba(0, 212, 255, 0.4);
+                    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+                }
+
+                .profile-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .no-image {
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 212, 255, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .no-image i {
+                    font-size: 60px;
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                .profile-name h4 {
+                    color: #fff;
+                    font-size: 1.3em;
+                    margin: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .applicant-info {
+                    flex: 1;
+                    min-width: 300px;
+                }
+
+                .info-columns {
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-bottom: 15px;
+                }
+
+                .info-column {
+                    flex: 1;
+                    min-width: 200px;
+                    margin-right: 15px;
+                }
+
+                .info-item {
+                    margin-bottom: 15px;
+                    padding: 10px 15px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 8px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                }
+
+                .info-label {
+                    color: #ffffff;
+                    font-weight: 600;
+                    margin-right: 10px;
+                }
+
+                .info-value {
+                    color: #fff;
+                    font-weight: 400;
+                    text-align: right;
+                    word-break: break-word;
+                }
+
+                .full-width {
+                    width: 100%;
+                }
+
+                /* Help Section */
+                .help-section {
+                    padding: 20px 30px;
+                    display: flex;
+                    align-items: center;
+                    background: rgba(0, 212, 255, 0.05);
+                }
+
+                .help-icon {
+                    font-size: 2em;
+                    color: #00d4ff;
+                    margin-right: 15px;
+                }
+
+                .help-text p {
+                    margin: 0;
+                    color: rgba(255, 255, 255, 0.8);
+                }
+
+                .help-text a {
+                    color: #00d4ff;
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+
+                .help-text a:hover {
+                    text-decoration: underline;
+                }
+
+                /* Responsive styles */
+                @media (max-width: 768px) {
+                    .application-title {
+                        font-size: 2.2em;
+                    }
+
+                    .card-header {
+                        text-align: center;
+                    }
+
+                    .state-label {
+                        font-size: 0.8em;
+                    }
+
+                    .applicant-profile {
+                        flex: 0 0 100%;
+                        margin-right: 0;
+                    }
+
+                    .info-columns {
+                        flex-direction: column;
+                    }
+
+                    .info-column {
+                        margin-right: 0;
+                    }
+                }
+            </style>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                // Add pulse animation to active state marker only (only one active)
+                const activeMarker = document.querySelector('.state-item.active .state-marker');
+                if (activeMarker) {
+                activeMarker.style.animation = 'pulse 2s infinite';
+                }
+
+                // Define pulse animation
+                const style = document.createElement('style');
+                style.innerHTML = `
+                @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+                }
+                `;
+                document.head.appendChild(style);
+                });
+            </script>
+        </t>
+    </template>
+</odoo>

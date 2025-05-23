@@ -1,0 +1,76 @@
+<odoo>
+    <record id="seq_emp_grievance" model="ir.sequence">
+        <field name="name">Employee Grievance Sequence</field>
+        <field name="code">emp.grievance</field>
+        <field name="prefix">GRV/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <record id="view_employee_grievance_form" model="ir.ui.view">
+        <field name="name">emp.grievance.form</field>
+        <field name="model">emp.grievance</field>
+        <field name="arch" type="xml">
+            <form string="Employee Grievance" class="o_form_view o_form_view_2col">
+                <header>
+                    <button name="action_review" string="Review" invisible="status != 'new'" class="oe_highlight"
+                            type="object"/>
+                    <button name="action_resolve" string="Resolve" invisible="status != 'in_review'"
+                            class="oe_highlight" type="object"/>
+                    <button name="action_close" string="Close" invisible="status != 'in_review'" class="oe_highlight"
+                            type="object"/>
+                    <button name="action_reset" string="Reset TO Draft" invisible="status not in  ['closed','resolved']"
+                            class="oe_highlight" type="object"/>
+                    <field name="status" widget="statusbar" options="{'clickable': True}"
+                           statusbar_visible="new,in_review,resolved,closed"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Complainant &amp; Meta" col="2">
+                            <field name="complainant_id" widget="many2one_avatar_user"/>
+                            <field name="department_name" readonly="1"/>
+                            <field name="submission_date" widget="date"/>
+                            <field name="complaint_type_id" widget="many2one"/>
+                        </group>
+
+                        <group string="Details &amp; Resolution" col="2">
+                            <field name="description" widget="text" colspan="2"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                            <field name="hr_responsible_id" widget="many2one_avatar_user"/>
+
+                        </group>
+                    </group>
+
+
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_grievance_list" model="ir.ui.view">
+        <field name="name">emp.grievance.list</field>
+        <field name="model">emp.grievance</field>
+        <field name="arch" type="xml">
+            <list string="Employee Grievances" decoration-info="status == 'in_review'"
+                  decoration-success="status == 'resolved'" decoration-danger="status == 'closed'">
+                <field name="name"/>
+                <field name="complainant_id" widget="many2one_avatar_user"/>
+                <field name="department_name"/>
+                <field name="complaint_type_id" widget="many2one"/>
+                <field name="status" widget="badge"/>
+                <field name="submission_date" widget="date"/>
+            </list>
+
+        </field>
+    </record>
+
+
+</odoo>

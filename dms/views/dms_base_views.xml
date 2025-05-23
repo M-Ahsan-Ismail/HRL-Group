@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="dms_base_form_view" model="ir.ui.view">
+        <field name="name">dms.base.form</field>
+        <field name="model">dms.base</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Partner Details" col="2">
+                            <field name="partner_id" widget="many2one_avatar"/>
+                            <field name="partner_email" widget="email" readonly="1"/>
+                            <field name="partner_phone" widget="phone" readonly="1"/>
+                            <field name="partner_street" placeholder="Street..." readonly="1"/>
+                            <field name="partner_city" placeholder="City..." readonly="1"/>
+                        </group>
+
+                        <group string="Dealership Details" col="2">
+                            <field name="dealer_name" widget="char"/>
+                            <field name="dealer_code" widget="char"/>
+                            <field name="dealer_type" widget="many2one"/>
+                            <field name="dealer_region" widget="many2one"/>
+                            <field name="opening_date" widget="date"
+                                   options="{'datepicker': {'format': 'dd-mm-yyyy'}}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Brands" col="2">
+                            <field name="authorized_brands" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="dms_base_tree_view" model="ir.ui.view">
+        <field name="name">dms.base.tree</field>
+        <field name="model">dms.base</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="priority" widget="priority" nolabel="1"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="opening_date" widget="date"/>
+                <field name="authorized_brands" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

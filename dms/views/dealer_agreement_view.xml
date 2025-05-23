@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_dealer_code" model="ir.sequence">
+        <field name="name">dealer.code</field>
+        <field name="code">dealer.code</field>
+        <field name="prefix">DC/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">standard</field>
+    </record>
+
+    <record id="seq_dealer_agreement" model="ir.sequence">
+        <field name="name">Dealer Agreement</field>
+        <field name="code">dealer.agreement</field>
+        <field name="prefix">DAG/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">standard</field>
+    </record>
+    <!-- Form View -->
+    <record id="dealer_ship_agreement_form_view" model="ir.ui.view">
+        <field name="name">dealership.agreement.form</field>
+        <field name="model">dealer.agreement</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="agreement_reference" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="📌 General Information" col="2">
+                            <field name="dealer_name"/>
+                            <field name="dealer_company_name"/>
+                            <field name="dealer_code"/>
+                            <field name="agreement_date"/>
+                            <field name="agreement_start_date"/>
+                            <field name="agreement_end_date"/>
+                        </group>
+
+                        <group string="🏢 Dealer Details" col="2">
+                            <field name="contact_person_name"/>
+                            <field name="phone_number"/>
+                            <field name="email_address"/>
+                            <field name="business_address"/>
+                            <field name="gst_tax_id"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="🚗 Dealership Scope" col="2">
+                            <field name="vehicle_brand_ids" widget="many2many_tags"/>
+                            <field name="vehicle_type_id" widget="many2one_avatar"/>
+                            <field name="region_territory"/>
+                            <field name="sales_target_monthly"/>
+                            <field name="annual_sales_quota"/>
+                        </group>
+
+                        <group string="💼 Terms &amp; Conditions" col="2">
+                            <field name="is_exclusive" widget="boolean_toggle"/>
+                            <field name="agreement_type" widget="selection_badge"/>
+                            <field name="auto_renewal" widget="boolean_toggle"/>
+
+                            <field name="renewal_terms"/>
+                            <field name="termination_clause"/>
+                            <field name="penalty_clause"/>
+
+                            <field name="support_service_ids"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="💰 Financial Terms" col="2">
+                            <field name="initial_deposit" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="commission_rate" widget="float"/>
+                            <field name="incentive_structure" widget="text"/>
+                            <field name="credit_limit" widget="monetary"/>
+                            <field name="currency_id" options="{'currency_field': 'currency_id'}" widget="selection"/>
+                        </group>
+
+                        <group string="📄 Attachments">
+                            <field name="signed_agreement_document" widget="many2many_binary">
+                            </field>
+
+                            <field name="dealer_license_copy" widget="many2many_binary">
+                            </field>
+
+                            <field name="company_registration_certificate" widget="many2many_binary">
+                            </field>
+                        </group>
+
+
+                    </group>
+
+                    <chatter reload_on_follower="True"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="dealer_agreement_list_view" model="ir.ui.view">
+        <field name="name">dealer.agreement.list</field>
+        <field name="model">dealer.agreement</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="priority" widget="priority" nolabel="1"/>
+                <field name="agreement_reference" widget="badge"/>
+
+
+                <field name="dealer_company_name"/>
+                <field name="dealer_code"/>
+
+                <field name="agreement_date"/>
+                <field name="agreement_start_date"/>
+                <field name="agreement_end_date"/>
+
+                <field name="commission_rate" widget="float" digits="[16, 2]"/>
+
+                <field name="initial_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="credit_limit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                <field name="is_exclusive" widget="boolean_toggle"/>
+                <field name="auto_renewal" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="dealer_agreement_kanban_view" model="ir.ui.view">
+        <field name="name">dealer.agreement.kanban</field>
+        <field name="model">dealer.agreement</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <!-- Fields to load for the Kanban view -->
+                <field name="agreement_reference"/>
+                <field name="dealer_name"/>
+                <field name="dealer_company_name"/>
+                <field name="status"/>
+                <field name="priority"/>
+                <field name="agreement_start_date"/>
+                <field name="agreement_end_date"/>
+                <field name="vehicle_brand_ids"/>
+
+                <!-- Kanban card template -->
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click"
+                             style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; background-color: #ffffff; box-shadow: 0 3px 6px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                            <!-- Header: Agreement Reference and Status -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <strong style="font-size: 16px; color: #2c3e50;">
+                                    <t t-esc="record.agreement_reference.value"/>
+                                </strong>
+                                <span t-att-class="'badge ' + (record.status.raw_value == 'draft' ? 'badge-secondary' : record.status.raw_value == 'active' ? 'badge-success' : record.status.raw_value == 'expired' ? 'badge-warning' : 'badge-danger')">
+                                    <t t-esc="record.status.value"/>
+                                </span>
+                            </div>
+
+                            <!-- Dealer Information -->
+                            <div style="margin-bottom: 10px;">
+                                <span style="font-weight: bold; color: #007bff; font-size: 14px;">
+                                    <t t-esc="record.dealer_name.value"/>
+                                </span>
+                                <br/>
+                                <small style="color: #7f8c8d;">
+                                    <t t-esc="record.dealer_company_name.value"/>
+                                </small>
+                            </div>
+
+                            <!-- Agreement Dates -->
+                            <div style="font-size: 12px; color: #555; margin-bottom: 10px;">
+                                <span>Start: <t t-esc="record.agreement_start_date.value"/></span>
+                                <span style="margin-left: 10px;">End: <t
+                                        t-esc="record.agreement_end_date.value"/></span>
+                            </div>
+
+
+                            <!-- Priority Indicator -->
+                            <div style="text-align: right; margin-top: 8px;">
+                                <i t-if="record.priority.raw_value == 'high'" class="fa fa-exclamation-triangle"
+                                   style="color: #e74c3c; font-size: 18px;" title="High Priority"/>
+                                <i t-else="" class="fa fa-check-circle" style="color: #27ae60; font-size: 18px;"
+                                   title="Low Priority"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

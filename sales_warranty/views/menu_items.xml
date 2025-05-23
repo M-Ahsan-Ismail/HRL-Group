@@ -1,0 +1,84 @@
+<odoo>
+    <record id="sales_warranty_act_window" model="ir.actions.act_window">
+        <field name="name">Sales Warranties</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sales.warranty</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no warranties. Click here to add a new Sales Warranty.
+            </p>
+        </field>
+    </record>
+
+    <record id="warranty_claim_act_window" model="ir.actions.act_window">
+        <field name="name">Warranty Claims</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">warranty.claim</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no warranties. Click here to add a new Sales Warranty.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_warranty_terms" model="ir.actions.act_window">
+        <field name="name">Warranty Terms</field>
+        <field name="res_model">warranty.terms</field>
+        <field name="view_mode">list,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no terms &amp; conditions yet.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_warranty_includes" model="ir.actions.act_window">
+        <field name="name">Warranty Includes</field>
+        <field name="res_model">warranty.includes</field>
+        <field name="view_mode">list,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no inclusions yet.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_warranty_excludes" model="ir.actions.act_window">
+        <field name="name">Warranty Excludes</field>
+        <field name="res_model">warranty.excludes</field>
+        <field name="view_mode">list,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There are no exclusions yet.
+            </p>
+        </field>
+    </record>
+
+
+    <menuitem name="Sales Warranties" id="sales_warranty_parent_menu"
+              web_icon="sales_warranty,static/description/icon.png" sequence="1"/>
+
+    <menuitem name="Sales Warranties" id="sales_warranty_child_menu" parent="sales_warranty_parent_menu"
+              action="sales_warranty_act_window" sequence="1"/>
+
+    <menuitem name="Warranty Claims" id="warranty_claim_menu" parent="sales_warranty_parent_menu"
+              action="warranty_claim_act_window" sequence="2"/>
+
+    <menuitem name="Configuration" id="sales_warranty_configuration_id" parent="sales_warranty_parent_menu"
+              sequence="3"/>
+
+    <menuitem id="menu_warranty_terms" name="Terms &amp; Conditions"
+              parent="sales_warranty_configuration_id" action="action_warranty_terms" sequence="10"/>
+
+    <menuitem id="menu_warranty_includes" name="Includes"
+              parent="sales_warranty_configuration_id" action="action_warranty_includes" sequence="20"/>
+
+    <menuitem id="menu_warranty_excludes" name="Excludes"
+              parent="sales_warranty_configuration_id" action="action_warranty_excludes" sequence="30"/>
+</odoo>

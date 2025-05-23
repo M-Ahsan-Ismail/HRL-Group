@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dms_base,dms.base,model_dms_base,,1,1,1,1
+access_dms_brands,dms.brands,model_dms_brands,,1,1,1,1
+access_brand_models,brand.models,model_brand_models,,1,1,1,1
+access_model_variant,model.variant,model_model_variant,,1,1,1,1
+access_variant_features,variant.features,model_variant_features,,1,1,1,1
+access_dealer_agreement,dealer.agreement,model_dealer_agreement,,1,1,1,1
+access_model_type,model.type,model_model_type,,1,1,1,1

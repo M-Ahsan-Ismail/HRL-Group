@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="warranty_claim_sequence_id" model="ir.sequence">
+        <field name="name">warranty.claim Sequence</field>
+        <field name="code">warranty.claim.sequence</field>
+        <field name="prefix">WCLM/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+
+    <record id="warranty_claim_form_view" model="ir.ui.view">
+        <field name="name">warranty.claim.form</field>
+        <field name="model">warranty.claim</field>
+        <field name="arch" type="xml">
+            <form string="Sales Warranty">
+                <header>
+                    <button name="action_submit" string="Submit" class="oe_highlight" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="%(action_approve_wizard_warranty_claim)d" string="Approve" class="oe_highlight"
+                            type="action"
+                            invisible="state != 'under_review'"/>
+                    <button name="%(action_rejection_wizard_warranty_claim)d" string="Reject" class="oe_highlight"
+                            type="action"
+                            invisible="state != 'under_review'"/>
+                    <button name="action_reset_to_draft" string="Reset TO Draft" class="oe_highlight" type="object"
+                            invisible="state not in ['approved','rejected']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,under_review,approved,rejected"/>
+                </header>
+
+                <sheet>
+                    <widget name="web_ribbon" title="Claim Denied 🚫" bg_color="text-bg-danger"
+                            invisible="state != 'rejected'"/>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Product &amp; Customer Details" col="2">
+                            <field name="customer_id" options="{'no_create': True}" readonly="1"/>
+                            <field name="product_id" options="{'no_create': True}" readonly="1"/>
+                            <field name="warranty_number_id" readonly="1"/>
+                        </group>
+
+                        <group string="Claim Details" col="2">
+                            <field name="claim_date"/>
+                            <field name="description" placeholder="Reason For Claiming"/>
+                            <field name="warranty_end_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group col="2" string="Proof Documents">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                            <!--                            <field name="image_1920" widget="image"/>-->
+                        </group>
+                        <group col="2" string="Vist Details">
+                            <field name="visit_required" widget="boolean_toggle"/>
+                            <field name="service_center" invisible="not visit_required"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Rejection Reason">
+                            <field name="decision_note" placeholder="Add rejection reason here..."
+                                   nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True"/>
+
+
+            </form>
+        </field>
+    </record>
+
+    <record id="warranty_claim_tree_view" model="ir.ui.view">
+        <field name="name">warranty.claim.list</field>
+        <field name="model">warranty.claim</field>
+        <field name="arch" type="xml">
+            <list string="Warrantie Claims">
+                <field name="customer_id"/>
+                <field name="product_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="sales_warranty_claim_search_view" model="ir.ui.view">
+        <field name="name">warranty.claim.search</field>
+        <field name="model">warranty.claim</field>
+        <field name="arch" type="xml">
+            <search string="Warranties Claim">
+                <group expand="1" string="Group By">
+                    <filter string="Expired Warranties" name="active" domain="[('active','=',False)]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+</odoo>

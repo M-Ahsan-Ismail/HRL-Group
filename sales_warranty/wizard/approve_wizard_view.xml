@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="approve_wizard_warranty_claim_view_form" model="ir.ui.view">
+            <field name="name">approve.wizard.view.form</field>
+            <field name="model">approve.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+
+                    <footer>
+                        <button string="Approve" name="visit_location" type="object" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_approve_wizard_warranty_claim" model="ir.actions.act_window">
+            <field name="name">Approve Claim</field>
+            <field name="res_model">approve.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="approve_wizard_warranty_claim_view_form"/>
+        </record>
+    </data>
+</odoo>
