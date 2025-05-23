@@ -28,3 +28,17 @@ The module generates a PDF warranty card report displaying product information, 
 Added a "Send by Mail" button on the Warranty form. Clicking the button opens the email composer with the Warranty Card PDF automatically attached. When the email is sent, it is delivered to the associated partner's email address.
 Admin can force_expire the card also.
 
+
+## Grievance Management & Portal
+
+Developed the Grievance Management Module, allowing employees to submit grievances through a modern, user-friendly portal. Employees can select the grievance type, provide issue details, and optionally upload supporting documents. Upon submission, a tracking ID is generated and displayed. The portal features a modern design with a responsive navbar that allows seamless navigation between submission and tracking forms.
+
+Each grievance record automatically captures the employee (based on env.user), their department, submission date, issue description, and any uploaded documents. Administrators can assign HR personnel to handle the grievance, and update its status by resolving, rejecting, or closing the case.
+
+
+
+
+
+
+
+
