@@ -4,9 +4,19 @@
 
 #### Dealer Management
 Customized the inventory , added menus for brands , models , variants , fetures , model_types, on product_template form user can check is_vehicel (marking i shows vechile oreinted fields) is_spare_part (marking it shows spare part oriented fields), fields for model details to engine details.
+Customized the contact from added , is_dealer , related_dealer (M20 with users) to confirm weather the contact is dealer or customer.
+Added separate menus in DMS for viewing dealers , customers.
+added menus in DMS for viewing products , spare parts and variants based on filtering recs.
+Developed the dealer agrement form includes details from dealer details to brand covers to certificates  to max capital with detailed qweb pdf report.
+
 
 #### Portal
-developed the modern and futuristic design dealership management portal having navbar for scroling between application and status section , enables individuals to apply for a dealership partnership by providing detailed information, including personal details, contact , location , diff certificates and investment capacity. Upon submission, system generates tracking ID for the user to monitor status via portal. portal displays the application state along with relevant details. Adminis can review applications, approve, or reject them. Upon approval, the system automatically creates a partner record for the approved request.
+1: Developed the modern and futuristic design dealership management portal having navbar for scroling between application and status section , enables individuals to apply for a dealership partnership by providing detailed information, including personal details, contact , location , diff certificates and investment capacity. Upon submission, system generates tracking ID for the user to monitor status via portal. portal displays the application state along with relevant details. Adminis can review applications, approve, or reject them. Upon approval, the system automatically creates a partner record for the approved request.
+
+2: Developed the modern dashboard for admin on portal to view specific month (new dealer , approved and pending) applications and all dealers with details like Applicant,	Company,	Business Type and 	Country.
+---- Developed the sales dashboard for admin to view speific user , specific duration sales with details like product , sale order , amount , status etc.
+---- Developed the opportunity dashboard for admin to view specific users , specific duration leads with some details like Opportunity,	Description,	Expected Revenue and	Stage etc.
+
 
 
 
