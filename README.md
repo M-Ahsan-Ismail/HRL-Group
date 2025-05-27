@@ -52,7 +52,9 @@ Approved: a green banner is shown with approval notice, and all fields/buttons a
 
 ### 🗓️ Attendance History Portal
 Developed a modern and user-friendly attendance history portal. Portal users can view their attendance records by providing a date range (Check In to Check Out) or by using quick filters such as Last Week, Last Month, or Last Year.
-Summary is also appeared such as total no.of hours worked in that range total days and average hours in that period and overall status.
+Summary also displayed a comprehensive summary, including the total number of hours worked, total days present, average hours per day, and the overall attendance status for the selected period.
+
+
 
 ## Grievance Management & Portal
 
