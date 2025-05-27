@@ -29,7 +29,7 @@ Added a "Send by Mail" button on the Warranty form. Clicking the button opens th
 Admin can force_expire the card also.
 
 
-### 🗓️ Leave Request Portal
+### 🗓️ Leave Request & Attendance History Portal
 Developed a custom leave request portal with modern UI design using dynamic elements and clean layout.
 Enhanced the leave type configuration to clearly define categories such as Hajj/Umrah, Sick, Casual, Annual, Compensatory, and Unpaid.
 
@@ -39,6 +39,8 @@ Automatically show/hide the document upload field based on selected leave type (
 Update or cancel time offs if they are still in the To Approve stage.
 View all applied time offs with their current status: Approved, Pending, Rejected, etc.
 View all allocated leaves and each category remaining leaves.
+Users can view their attendance records by providing a date range (Check In to Check Out) or by using quick filters such as Last Week, Last Month, or Last Year.
+Summary also displayed a comprehensive summary, including the total number of hours worked, total days present, average hours per day, and the overall attendance status for the selected period.
 
 
 
@@ -50,9 +52,8 @@ Users can group by leave type or status and sort by start date, end date, or dur
 Rejected: a red banner appears with a rejection message, all fields become read-only, and action buttons are disabled.
 Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
 
-### 🗓️ Attendance History Portal
-Developed a modern and user-friendly attendance history portal. Portal users can view their attendance records by providing a date range (Check In to Check Out) or by using quick filters such as Last Week, Last Month, or Last Year.
-Summary also displayed a comprehensive summary, including the total number of hours worked, total days present, average hours per day, and the overall attendance status for the selected period.
+### 🗓️  Portal
+
 
 
 
