@@ -51,7 +51,8 @@ Rejected: a red banner appears with a rejection message, all fields become read-
 Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
 
 ### 🗓️ Attendance History Portal
-
+Developed a modern and user-friendly attendance history portal. Portal users can view their attendance records by providing a date range (Check In to Check Out) or by using quick filters such as Last Week, Last Month, or Last Year.
+Summary is also appeared such as total no.of hours worked in that range total days and average hours in that period and overall status.
 
 ## Grievance Management & Portal
 
