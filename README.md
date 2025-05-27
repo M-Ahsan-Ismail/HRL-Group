@@ -36,14 +36,17 @@ Enhanced the leave type configuration to clearly define categories such as Hajj/
 ##### Enabled users to:
 Apply for new time off by selecting leave type, start/end date, and reason.
 Automatically show/hide the document upload field based on selected leave type (e.g., shows only for "Sick").
-View all applied time offs with their current status: Approved, Pending, Rejected, etc.
 Update or cancel time offs if they are still in the To Approve stage.
+View all applied time offs with their current status: Approved, Pending, Rejected, etc.
+View all allocated leaves and each category remaining leaves.
+
+
 
 ##### Added Filter , Sort and GroupBy 
 Users can filter time offs by last week, last month, last year.
 Users can group by leave type or status and sort by start date, end date, or duration.
 
-##### If a time off request is:
+##### If a time off request Rejected or Approved:
 Rejected: a red banner appears with a rejection message, all fields become read-only, and action buttons are disabled.
 Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
 
@@ -58,6 +61,7 @@ Each grievance record automatically captures the employee (based on env.user), t
 
 
 
+### 🗓️ Attendance History Portal
 
 
 
