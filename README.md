@@ -50,7 +50,7 @@ Users can group by leave type or status and sort by start date, end date, or dur
 Rejected: a red banner appears with a rejection message, all fields become read-only, and action buttons are disabled.
 Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
 
-
+### 🗓️ Attendance History Portal
 
 
 ## Grievance Management & Portal
@@ -61,7 +61,7 @@ Each grievance record automatically captures the employee (based on env.user), t
 
 
 
-### 🗓️ Attendance History Portal
+
 
 
 
