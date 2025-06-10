@@ -50,8 +50,16 @@ Approved: a green banner is shown with approval notice, and all fields/buttons a
 
 ## Attendance History Portal
 Users can view their attendance records by providing a date range(Check In , Check Out).
+Implemented pagination to show 10 recs/page and for efficient memory use and to reduce server load. 
 Can apply quick filters such as Last Week, Last Month, or Last Year.
 Attendance report also displayed, including the total number of hours worked of selected period, total days worked, average hours per day, total leaves and the overall attendance status.
+
+
+## Employee Expense Portal
+Developed expense portal , allows users to submit expenses by providing a description, category, date, amount, and payment mode (company or employee).
+All submitted expenses are displayed for user review.
+Users can update expenses before approved status.
+Portal supports filtering expenses by last week, last month, or last year, and grouping expenses by status.
 
 
 
