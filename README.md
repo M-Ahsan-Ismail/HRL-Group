@@ -29,28 +29,35 @@ Added a "Send by Mail" button on the Warranty form. Clicking the button opens th
 Admin can force_expire the card also.
 
 
-### 🗓️ Leave Request & Attendance History Portal
+## Leave Request Portal
 Developed a custom leave request portal with modern UI design using dynamic elements and clean layout.
 Enhanced the leave type configuration to clearly define categories such as Hajj/Umrah, Sick, Casual, Annual, Compensatory, and Unpaid.
 
 ##### Enabled users to:
-Apply for new time off by selecting leave type, start/end date, and reason.
+View all applied time offs with their current status: Approved, Pending, Rejected, etc.
+Apply for new time off by selecting leave type, reason and start/end date or half day or custom hours.
 Automatically show/hide the document upload field based on selected leave type (e.g., shows only for "Sick").
 Update or cancel time offs if they are still in the To Approve stage.
-View all applied time offs with their current status: Approved, Pending, Rejected, etc.
-View all allocated leaves and each category remaining leaves.
-Users can view their attendance records by providing a date range (Check In to Check Out) or by using quick filters such as Last Week, Last Month, or Last Year.
-Summary also displayed a comprehensive summary, including the total number of hours worked, total days present, average hours per day, and the overall attendance status for the selected period.
-
-
-
-##### Added Filter , Sort and GroupBy 
+View all  category allocated leaves , remaining and requested leaves.
 Users can filter time offs by last week, last month, last year.
-Users can group by leave type or status and sort by start date, end date, or duration.
+Users can group by leave type or status and sort by start date, end date, or duration and can reset.
 
 ##### If a time off request Rejected or Approved:
 Rejected: a red banner appears with a rejection message, all fields become read-only, and action buttons are disabled.
 Approved: a green banner is shown with approval notice, and all fields/buttons are read-only to prevent edits.
+
+
+
+## Attendance History Portal
+
+Users can view their attendance records by providing a date range or by using quick filters such as Last Week, Last Month, or Last Year.
+attendance report also displayed, including the total number of hours worked of selected period, total days worked, average hours per day, total leaves and the overall attendance status.
+
+Users can filter time offs by last week, last month, last year.
+Users can group by leave type or status and sort by start date, end date, or duration.
+
+
+
 
 
 
