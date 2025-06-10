@@ -57,7 +57,7 @@
     <record id="action_res_partner_custom" model="ir.actions.act_window">
         <field name="name">Partners</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('is_dealer', '=', True)]</field>
         <field name="context">{'create': False}</field>
     </record>
@@ -75,7 +75,7 @@
     <record id="inventory_is_vehchile_products_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_vehicle', '=', True)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
@@ -85,7 +85,7 @@
     <record id="inventory_is_spare_part_products_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_spare_part', '=', True)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
@@ -95,7 +95,7 @@
     <record id="inventory_product_variants_action" model="ir.actions.act_window">
         <field name="name">Variants</field>
         <field name="res_model">product.product</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
             <p class="o_nocontent_help">😞 No Variants Yet!</p>
@@ -116,7 +116,7 @@
     <record id="clients_per_dealer_field_in_res_partner_action" model="ir.actions.act_window">
         <field name="name">Clients</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('res_user_id', '=', uid)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">

@@ -17,7 +17,7 @@
 
                 <xpath expr="//group[1]" position="inside">
                     <group string="Vehicle Details" invisible="is_vehicle == False">
-                        <field name="model_name" widget="char" invisible="is_vehicle == False"/>
+                        <field name="model_name"  invisible="is_vehicle == False"/>
                         <field name="fuel_type" widget="selection_badge" invisible="is_vehicle == False"/>
                         <field name="code" widget="char" invisible="is_vehicle == False"/>
                         <field name="launch_year" widget="date" invisible="is_vehicle == False"/>

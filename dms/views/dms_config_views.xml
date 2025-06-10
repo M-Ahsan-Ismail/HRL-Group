@@ -71,6 +71,8 @@
                             <field name="name" widget="char"/>
                             <field name="model_id" widget="many2one"/>
                             <field name="engine_type" widget="selection_badge"/>
+                            <field name="transmission_type" widget="selection_badge"/>
+                            <field name="engine_size"/>
                             <field name="color" widget="color_picker"/>
                             <field name="feature_ids" widget="many2many_tags"/>
                         </group>

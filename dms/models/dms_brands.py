@@ -28,8 +28,18 @@ class ModelVariants(models.Model):
     model_id = fields.Many2one('brand.models', string='Model', required=True)
     engine_type = fields.Selection([('petrol', 'Petrol'), ('diesel', 'Diesel'), ('hybrid', 'Hybrid')],
                                    string='Engine Type', required=True)
+    engine_size = fields.Char('Engine Size')
     color = fields.Integer('Variant Color')
     feature_ids = fields.Many2many('variant.features', string='Features')
+    transmission_type = fields.Selection(
+        selection=[
+            ('manual', 'Manual'),
+            ('automatic', 'Automatic'),
+            ('cvt', 'CVT'),
+            ('semi_automatic', 'Semi-Automatic'),
+            ('dual_clutch', 'Dual-Clutch')
+        ],
+        string="Transmission Type")
 
 
 class VariantFeatures(models.Model):

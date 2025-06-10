@@ -7,19 +7,21 @@ class ProductTemplateInherit(models.Model):
     is_vehicle = fields.Boolean('Is Vehicle', default=False)
     is_spare_part = fields.Boolean('Is Spare Part', default=False)
 
-    model_name = fields.Char('Model Name', required=True)
+    # Vehicle Details
+    model_name = fields.Many2one('brand.models', 'Model Name')
     fuel_type = fields.Selection([('petrol', 'Petrol'), ('diesel', 'Diesel'), ('hybrid', 'Hybrid')],
-                                 string='Fuel Type', required=True)
-    code = fields.Char('Model Code', required=True)
-    launch_year = fields.Date('Launch Year', required=True)
+                                 string='Fuel Type')
+    code = fields.Char('Model Code', related='model_name.code')
+    launch_year = fields.Date('Launch Year')
     body_type = fields.Selection(
         [('sedan', 'Sedan'), ('suv', 'Suv'), ('crossover', 'Crossover'), ('hatchback', 'Hatchback')], 'Body Type')
     seating_capacity = fields.Integer('Seating Capacity')
 
+    # Engine Details
     model_variant_id = fields.Many2one('model.variant', 'Variant')
-    engine_size = fields.Char('Engine Size')
-    color = fields.Integer('Color')
-    color_code = fields.Integer('Color Code')
+    engine_size = fields.Char('Engine Size', related='model_variant_id.engine_size')
+    color = fields.Integer('Variant Color', related='model_variant_id.color')
+    color_code = fields.Integer('Variant Color', related='model_variant_id.color')
     transmission_type = fields.Selection(
         selection=[
             ('manual', 'Manual'),
@@ -29,9 +31,9 @@ class ProductTemplateInherit(models.Model):
             ('dual_clutch', 'Dual-Clutch')
         ],
         string="Transmission Type",
-        required=True
+        related='model_variant_id.transmission_type'
     )
-    feature_ids = fields.Many2many('variant.features', 'Features')
+    feature_ids = fields.Many2many('variant.features', string='Features', related='model_variant_id.feature_ids')
 
     spare_part_name = fields.Char(string='Part Name', required=True)
     part_number = fields.Char(string='Part Number', help="Unique identifier for the part")
