@@ -49,15 +49,9 @@ Approved: a green banner is shown with approval notice, and all fields/buttons a
 
 
 ## Attendance History Portal
-
-Users can view their attendance records by providing a date range or by using quick filters such as Last Week, Last Month, or Last Year.
-attendance report also displayed, including the total number of hours worked of selected period, total days worked, average hours per day, total leaves and the overall attendance status.
-
-Users can filter time offs by last week, last month, last year.
-Users can group by leave type or status and sort by start date, end date, or duration.
-
-
-
+Users can view their attendance records by providing a date range(Check In , Check Out).
+Can apply quick filters such as Last Week, Last Month, or Last Year.
+Attendance report also displayed, including the total number of hours worked of selected period, total days worked, average hours per day, total leaves and the overall attendance status.
 
 
 
