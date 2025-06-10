@@ -1,0 +1,54 @@
+<odoo>
+    <template id="employee__create_expense_controller_id" name="Expense Creation">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Create New Expense</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/create/expense" class="row g-3">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="col-md-6">
+                                <label for="description" class="form-label">Description *</label>
+                                <input type="text" class="form-control" id="description" name="description"
+                                       value="" required="required"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="category_id" class="form-label">Category *</label>
+                                <select class="form-control" id="category_id" name="category_id" required="required">
+                                    <option value="">Select Category</option>
+                                    <t t-foreach="al_categories" t-as="category">
+                                        <option t-att-value="category['id']" t-esc="category['name']"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="expense_date" class="form-label">Expense Date *</label>
+                                <input type="date" class="form-control" id="expense_date" name="expense_date"
+                                       value="" required="required"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="amount" class="form-label">Amount *</label>
+                                <input type="number" step="0.01" class="form-control" id="amount" name="amount"
+                                       value="" required="required"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="paid_by" class="form-label">Paid By *</label>
+                                <select class="form-control" id="paid_by" name="paid_by" required="required">
+                                    <option value="">Select Payment Mode</option>
+                                    <option value="Employee">Employee (to reimburse)</option>
+                                    <option value="company">Company</option>
+                                </select>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <a href="/view/employee/expense" class="btn btn-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
