@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_expense_id" name="Portal My Home : Expense History"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+                background-color: #e6f7ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/view/employee/expense'"
+                       style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #00334d; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Expense History
+                                <img src="/bss_employee_expense_portal_v16/static/description/portal_icon.png"
+                                     alt="Attendance Icon"
+                                     style="width: 35px; height: 35px; margin-left: 30px;"/>
+                            </h4>
+
+                            <t t-set="attendance_count"
+                               t-value="request.env['hr.expense'].sudo().search_count([('employee_id.user_id','=', request.env.uid)])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #004466;">Total expense entries</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #005580;">
+                                    <t t-esc="attendance_count"/>
+                                </strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="employee_expense_portal_id" name="Expense History">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Expense History</h4>
+                        <a href="/create/expense" class="btn btn-light btn-sm">
+                            <i class="fa fa-plus me-2"></i>Create New
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filter, Sort, and Group Controls -->
+                        <form method="GET" action="/view/employee/expense" class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <label for="filter_by" class="form-label">Filter By</label>
+                                <select class="form-control" id="filter_by" name="filter_by">
+                                    <option value="" disabled="disabled"
+                                            t-att-selected="not request.params.get('filter_by')">Filter By</option>
+                                    <option value="last_week"
+                                            t-att-selected="request.params.get('filter_by') == 'last_week'">Last
+                                        Week</option>
+                                    <option value="last_month"
+                                            t-att-selected="request.params.get('filter_by') == 'last_month'">Last
+                                        Month</option>
+                                    <option value="last_year"
+                                            t-att-selected="request.params.get('filter_by') == 'last_year'">Last
+                                        Year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="group_by" class="form-label">Group By</label>
+                                <select class="form-control" id="group_by" name="group_by">
+                                    <option value="" disabled="disabled"
+                                            t-att-selected="not request.params.get('group_by')">Group By</option>
+                                    <option value="state" t-att-selected="request.params.get('group_by') == 'state'">
+                                        State</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fa fa-check mr-1"></i>Apply
+                                </button>
+                                <a href="/view/employee/expense" class="btn btn-outline-secondary">
+                                    <i class="fa fa-refresh mr-1"></i>Reset
+                                </a>
+                            </div>
+                        </form>
+
+                        <!-- Expense Table -->
+                        <div class="table-responsive">
+                            <t t-if="group_by == 'none'">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Expense Date</th>
+                                            <th>Category</th>
+                                            <th>Employee</th>
+                                            <th>Paid By</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="filter_expense" t-as="expense">
+                                            <tr>
+                                                <td><t t-esc="expense['name']"/></td>
+                                                <td><t t-esc="expense['expense_date']"/></td>
+                                                <td><t t-esc="expense['product']"/></td>
+                                                <td>James Smith</td>
+                                                <td><t t-esc="expense['payment_mode']"/></td>
+                                                <td><t t-esc="expense['total_amount']"/></td>
+                                                <td>
+                                                    <span t-att-class="'badge bg-' + (
+                                                        'secondary' if expense['state'] == 'draft' else
+                                                        'info' if expense['state'] == 'reported' else
+                                                        'primary' if expense['state'] == 'submitted' else
+                                                        'success' if expense['state'] == 'approved' else
+                                                        'dark' if expense['state'] == 'done' else
+                                                        'danger')"><t t-esc="{'draft': 'To Report', 'reported': 'To Submit', 'submitted': 'Submitted','approved': 'Approved','done': 'Done',
+                                                                            'refused': 'Refused'}[expense['state']]"/></span>
+
+
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success btn-sm rounded-pill"
+                                                            data-bs-toggle="modal"
+                                                            t-attf-data-bs-target="#expenseModal#{expense['id']}">
+                                                        Edit
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="not filter_expense">
+                                            <td colspan="8" class="text-center py-5">
+                                                <div class="empty-state">
+                                                    <i class="fa fa-money-bill fa-3x text-muted mb-3"></i>
+                                                    <h5>No Expense Records Found</h5>
+                                                    <p class="text-muted">There are no expense records available for the
+                                                        selected filter.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-if="group_by == 'state'">
+                                <t t-foreach="grouped_data.keys()" t-as="group_key">
+                                    <h5 class="mt-4 mb-3">
+                                        <t t-set="state_label">
+                                            <t t-if="group_key == 'approved'">Approved</t>
+                                            <t t-elif="group_key == 'draft'">Draft</t>
+                                            <t t-elif="group_key == 'reported'">Reported</t>
+                                            <t t-else="">Unknown</t>
+                                        </t>
+                                        Status: <t t-esc="state_label"/>
+                                    </h5>
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Expense Date</th>
+                                                <th>Category</th>
+                                                <th>Employee</th>
+                                                <th>Paid By</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="grouped_data[group_key]" t-as="expense">
+                                                <tr>
+                                                    <td><t t-esc="expense['name']"/></td>
+                                                    <td><t t-esc="expense['expense_date']"/></td>
+                                                    <td><t t-esc="expense['product']"/></td>
+                                                    <td>James Smith</td>
+                                                    <td><t t-esc="expense['payment_mode']"/></td>
+                                                    <td><t t-esc="expense['total_amount']"/></td>
+                                                    <td>
+                                                        <span t-att-class="'badge bg-' + ('success' if expense['state'] == 'approved' else 'warning' if expense['state'] == 'draft' else 'danger' if expense['state'] == 'reported' else 'secondary')">
+                                                            <t t-esc="expense['state']"/>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button"
+                                                                class="btn btn-success btn-sm rounded-pill"
+                                                                data-bs-toggle="modal"
+                                                                t-attf-data-bs-target="#expenseModal#{expense['id']}">
+                                                            Edit
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                                <t t-if="not grouped_data or not any(grouped_data.values())">
+                                    <div class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fa fa-money-bill fa-3x text-muted mb-3"></i>
+                                            <h5>No Expense Records Found</h5>
+                                            <p class="text-muted">There are no expense records available.</p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+        <t t-foreach="filter_expense" t-as="expense">
+            <div class="modal fade" t-attf-id="expenseModal#{expense['id']}" tabindex="-1"
+                 t-attf-aria-labelledby="expenseModalLabel#{expense['id']}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" t-attf-id="expenseModalLabel#{expense['id']}">Update Expense</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form t-attf-action="/update/expense/#{expense['id']}" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-body">
+                                <div role="alert" class="alert alert-danger" t-if="expense['state'] == 'refused'">
+                                    <p class="m-0"><strong>Note: </strong>Expense request has been Refused.</p>
+                                </div>
+                                <div role="alert" class="alert alert-info" t-if="expense['state'] == 'approved'">
+                                    <p class="m-0"><strong>Note: </strong>You can't update an Approved expense.</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label t-attf-for="name#{expense['id']}" class="form-label">Description *</label>
+                                    <input type="text" class="form-control" t-attf-id="name#{expense['id']}" name="name"
+                                           t-att-value="expense['name']"
+                                           t-att-readonly="expense['state'] in ['approved', 'done', 'refused'] and 'readonly' or None"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label t-attf-for="product#{expense['id']}" class="form-label">Category *</label>
+                                    <t t-if="expense['state'] in ['draft', 'reported', 'submitted']">
+                                        <select class="form-control" t-attf-id="product#{expense['id']}" name="product"
+                                                required="required">
+                                            <option value="">Select Category</option>
+                                            <t t-foreach="all_products" t-as="product">
+                                                <option t-att-value="product['id']"
+                                                        t-att-selected="product['name'] == expense['product'] and 'selected' or None"
+                                                        t-esc="product['name']"/>
+                                            </t>
+                                        </select>
+                                    </t>
+                                    <t t-else="">
+                                        <input type="text" class="form-control" t-attf-id="product#{expense['id']}"
+                                               t-att-value="expense['product']"
+                                               t-att-readonly="expense['state'] in ['approved', 'done', 'refused'] and 'readonly' or None"/>
+                                    </t>
+                                </div>
+                                <div class="mb-3">
+                                    <label t-attf-for="total_amount#{expense['id']}" class="form-label">Total Amount
+                                        *</label>
+                                    <input type="number" step="0.01" class="form-control"
+                                           t-attf-id="total_amount#{expense['id']}" name="total_amount"
+                                           t-att-value="expense['total_amount']"
+                                           t-att-readonly="expense['state'] in ['approved', 'done', 'refused'] and 'readonly' or None"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label t-attf-for="payment_mode#{expense['id']}" class="form-label">Paid By
+                                        *</label>
+                                    <t t-if="expense['state'] in ['draft', 'reported', 'submitted']">
+                                        <select class="form-control" t-attf-id="payment_mode#{expense['id']}"
+                                                name="payment_mode" required="required">
+                                            <option value="own_account"
+                                                    t-att-selected="expense['payment_mode'] == 'Employee' and 'selected' or None">
+                                                Employee (to reimburse)</option>
+                                            <option value="company_account"
+                                                    t-att-selected="expense['payment_mode'] == 'Company' and 'selected' or None">
+                                                Company</option>
+                                        </select>
+                                    </t>
+                                    <t t-else="">
+                                        <input type="text" class="form-control" t-attf-id="payment_mode#{expense['id']}"
+                                               t-att-value="expense['payment_mode'].replace('Employee', 'Employee (to reimburse)').replace('Company', 'Company')"
+                                               t-att-readonly="expense['state'] in ['approved', 'done', 'refused'] and 'readonly' or None"/>
+                                    </t>
+                                </div>
+                                <div class="mb-3">
+                                    <label t-attf-for="expense_date#{expense['id']}" class="form-label">Expense Date
+                                        *</label>
+                                    <input type="date" class="form-control" t-attf-id="expense_date#{expense['id']}"
+                                           name="expense_date"
+                                           t-att-value="expense['expense_date'].strftime('%Y-%m-%d') if expense['expense_date'] else ''"
+                                           t-att-readonly="expense['state'] in ['approved', 'done', 'refused'] and 'readonly' or None"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary"
+                                        t-att-disabled="expense['state'] in ['approved', 'done', 'refused'] and 'disabled' or None">
+                                    Update
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
