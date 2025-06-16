@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="time_off_form_inherit_id" model="ir.ui.view">
+        <field name="name">time.off.form</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="cancel_reason"/>
+                <field name="leave_type" invisible="1"/>
+                <field name="medical_attachment_ids" widget="many2many_binary" attrs="{'invisible': [('leave_type', '!=', 'sick')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="time_off_type_form_inherit_id" model="ir.ui.view">
+        <field name="name">time.off.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='requires_allocation']" position="after">
+                <field name="leave_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
