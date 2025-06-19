@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_fetch_payslip" name="Portal My Home: Attendance History"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box o_portal_doc_entry border-0 shadow-sm"
+                     style="cursor: pointer; width: 100%; max-width: 420px; min-height: 100px; background-color: #e6f7ff; color: black; border-radius: 8px; padding: clamp(8px, 2vw, 10px); transition: all 0.3s ease-in-out; position: relative; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                    <a t-att-href="'/fetch/payslip'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #00334d; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem; display: flex; align-items: center;">
+                                Payslip's
+                                <img src="/bss_salary_slip_portal/static/description/portal_icon.png"
+                                     alt="Payslip Icon"
+                                     style="width: 10vw; max-width: 35px; height: auto; margin-left: clamp(15px, 5vw, 20px);"/>
+                            </h4>
+                            <t t-set="payslip_count"
+                               t-value="request.env['hr.payslip'].sudo().search_count([('employee_id.user_id','=', request.env.uid),('state','in',['done','paid'])])"/>
+                            <p style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #333;">
+                                <span style="font-weight: 500; color: #004466;">Total Payslips </span><br/>
+                                <span><strong style="font-size: 1.1rem; font-weight: 700; color: #005580;">
+                                    <t t-esc="payslip_count"/>
+                                </strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="payslip_fetcher_id" name="Payslip History">
+        <t t-call="website.layout">
+            <div id="wrap1" class="o_portal_wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Header -->
+                            <div class="o_portal_page_header">
+                                <div class="o_page_header">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h1 class="o_page_title">
+                                                        <i class="fa fa-money-bill-alt me-2"></i>
+                                                        Payslips
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="o_portal_content">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="card-title mb-0">
+                                                    <i class="fa fa-list me-2"></i>
+                                                    Payslip History
+                                                </h5>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <t t-if="payslip_list">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm table-hover mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th class="text-left">
+                                                                        <i class="fa fa-file-text me-1"></i>
+                                                                        Payslip
+                                                                    </th>
+                                                                    <th class="text-left">
+                                                                        <i class="fa fa-calendar me-1"></i>
+                                                                        Date From
+                                                                    </th>
+                                                                    <th class="text-left">
+                                                                        <i class="fa fa-calendar me-1"></i>
+                                                                        Date To
+                                                                    </th>
+                                                                    <th class="text-left">
+                                                                        <i class="fa fa-tag me-1"></i>
+                                                                        Reference
+                                                                    </th>
+                                                                    <th class="text-left">
+                                                                        <i class="fa fa-leaf me-1"></i>
+                                                                        Action
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <t t-foreach="payslip_list" t-as="payslip">
+                                                                    <tr class="o_portal_table_row">
+                                                                        <td>
+                                                                            <span class="text-muted">
+                                                                                <t t-esc="payslip['reference']"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span class="badge bg-light text-dark">
+                                                                                <t t-esc="payslip['date_from']"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span class="badge bg-light text-dark">
+                                                                                <t t-esc="payslip['date_to']"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span class="badge bg-secondary">
+                                                                                <t t-esc="payslip['number']"/>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <a t-attf-href="/fetch/payslip/#{payslip['payslip_id']}"
+                                                                               class="btn-link text-decoration-none fw-bold">
+                                                                                <i class="fa fa-eye me-2 text-primary"></i>
+                                                                                View
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="text-center py-5">
+                                                        <div class="text-muted">
+                                                            <i class="fa fa-inbox fa-3x mb-3"></i>
+                                                            <h4>No Payslips Found</h4>
+                                                            <p>You don't have any payslips available yet.</p>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Payslip Detail Template -->
+    <template id="payslip_detail_id" name="Payslip Detail">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_portal_wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Header with Back Button -->
+                            <div class="o_portal_page_header">
+                                <div class="o_page_header">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <br/>
+                                                        <button class="btn btn-primary"
+                                                                t-attf-onclick="window.location.href='/fetch/payslip/#{payslip_id}?action=download'">
+                                                            <i class="fa fa-download me-2"></i>
+                                                            Download Payslip
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex align-items-center">
+                                        <h1 class="o_page_title mb-0">
+                                            <i class="fa fa-file-text me-2"></i>
+                                            Payslip Details
+                                        </h1>
+                                    </div>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="o_portal_content">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <!-- Payslip Information Card -->
+                                            <div class="card mb-4">
+                                                <div class="card-header bg-primary text-white">
+                                                    <h5 class="card-title mb-0">
+                                                        <i class="fa fa-info-circle me-2"></i>
+                                                        Payslip Information
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold text-muted">
+                                                                    Employee</label>
+                                                                <div class="form-control-plaintext">
+                                                                    <i class="fa fa-user me-2 text-primary"></i>
+                                                                    <t t-esc="employee_name"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold text-muted">
+                                                                    Reference</label>
+                                                                <div class="form-control-plaintext">
+                                                                    <i class="fa fa-hashtag me-2 text-primary"></i>
+                                                                    <t t-esc="reference"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold text-muted">Date
+                                                                    From</label>
+                                                                <div class="form-control-plaintext">
+                                                                    <i class="fa fa-calendar-alt me-2 text-success"></i>
+                                                                    <t t-esc="date_from"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold text-muted">Date
+                                                                    To</label>
+                                                                <div class="form-control-plaintext">
+                                                                    <i class="fa fa-calendar-alt me-2 text-danger"></i>
+                                                                    <t t-esc="date_to"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Payslip Lines Card -->
+                                            <div class="card">
+                                                <div class="card-header bg-primary text-white">
+                                                    <h5 class="card-title mb-0">
+                                                        <i class="fa fa-list-alt me-2"></i>
+                                                        Salary Details
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <t t-if="line_ids">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-striped mb-0">
+                                                                <thead class="table-dark">
+                                                                    <tr>
+                                                                        <th class="text-left">Description</th>
+                                                                        <th class="text-right">Quantity</th>
+                                                                        <th class="text-right">Rate</th>
+                                                                        <th class="text-right">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <t t-foreach="line_ids" t-as="line">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong t-esc="line.name"/>
+                                                                                <t t-if="line.code">
+                                                                                    <small class="text-muted">(<t
+                                                                                            t-esc="line.code"/>)</small>
+                                                                                </t>
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                <t t-esc="line.quantity"/>
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                <t t-esc="line.rate"/>
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                <span t-att-class="'fw-bold ' + ('text-success' if line.total >= 0 else 'text-danger')">
+                                                                                    <t t-esc="line.total"/>
+                                                                                </span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </t>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <div class="text-center py-4">
+                                                            <div class="text-muted">
+                                                                <i class="fa fa-exclamation-triangle fa-2x mb-2"></i>
+                                                                <h5>No Salary Details Available</h5>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div style="text-align: right">
+                        <div class="d-flex align-items-center justify-content-end"> <!-- Changed to justify-content-end -->
+                            <a href="/fetch/payslip" class="btn btn-outline-secondary">
+                                <i class="fa fa-arrow-left me-2"></i>
+                                Back to List
+                            </a>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
