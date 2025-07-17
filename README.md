@@ -63,6 +63,16 @@ Portal supports filtering expenses by last week, last month, or last year, and g
 
 
 
+
+## Loan & Advances Portal
+Designed and implemented a comprehensive Loan & Advances Portal that allows users to:
+View a complete history of their applied loans
+Update or cancel loan requests while in the Draft stage
+Submit new loan applications through a user-friendly interface
+View detailed installment breakdowns
+Efficiently search, filter, group, and sort loan records using advanced tools.
+
+
 ## Grievance Management & Portal
 
 Developed the Grievance Management Module, allowing employees to submit grievances through a modern, user-friendly portal. Employees can select the grievance type, provide issue details, and optionally upload supporting documents. Upon submission, a tracking ID is generated and displayed. The portal features a modern design with a responsive navbar that allows seamless navigation between submission and tracking forms.
