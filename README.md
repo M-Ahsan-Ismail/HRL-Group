@@ -70,6 +70,7 @@ View a complete history of their applied loans
 Update or cancel loan requests while in the Draft stage
 Submit new loan applications through a user-friendly interface
 View detailed installment breakdowns
+supports multi compnay.
 Efficiently search, filter, group, and sort loan records using advanced tools.
 
 
