@@ -1,0 +1,52 @@
+<odoo>
+    <template id="post_hr_loan_request_id" name="Create Loan Request">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Create Loan Request</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/loan/request" class="row g-3">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Employee Name</label>
+                                <input type="text" class="form-control" t-att-value="employee_name" readonly="1"/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-control" t-att-value="department_name" readonly="1"/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Loan Type</label>
+                                <select name="loan_type" class="form-control" required="1">
+                                    <option value="loan">Loan</option>
+                                    <option value="advance">Advance</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Loan Amount</label>
+                                <input type="number" name="loan_amount" step="0.01" class="form-control" required="1"/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Installments</label>
+                                <input type="number" name="no_of_emi" step="0.01" class="form-control" required="1"/>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end">
+                                <a href="/my/home" class="btn btn-secondary me-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

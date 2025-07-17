@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="loan_advances_portal_button_id" name="Portal My Home : Loan &amp; Advances"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+                background-color: #e6f7ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/fetch/loans'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #00334d; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Loan &amp; Advances
+                                <img src="/bss_loan_advances_portal/static/description/portal_icon.png"
+                                     alt="Attendance Icon"
+                                     style="width: 35px; height: 35px; margin-left: 30px;"/>
+                            </h4>
+
+                            <t t-set="loan_count"
+                               t-value="request.env['hr.loan'].sudo().search_count([('employee_id','=',request.env.user.employee_id.id),('state','=','approve')])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #004466;">Total Approved Loans</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #005580;">
+                                    <t t-esc="loan_count"/>
+                                </strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="loan_history_fetcher_id" name="Loan History">
+        <t t-call="website.layout">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <br/><br/>
+                        <div class="card">
+                            <div class="card-header row">
+                                <span style="font-size: 30px;" class="card-title mb-0 col-6">
+                                    <i class="fa fa-money"></i> Loan &amp; Advances
+                                    <small class="text-muted">(<t t-esc="total_loans"/> loans)</small>
+                                </span>
+                                <span class="col-6" style="text-align: right;">
+                                    <button type="submit" class="btn btn-primary rounded-pill flex-grow-1">
+                                        <a href="/loan/request" class="btn btn-primary rounded-pill px-4">
+                                            Apply for Loan <i class="fa fa-long-arrow-right ms-2"></i>
+                                        </a>
+                                    </button>
+                                </span>
+                            </div>
+                            <div class="card-body">
+
+                                <!-- Filter and Search Section -->
+                                <form method="GET" action="/fetch/loans" class="row g-3 mb-4">
+
+                                    <div class="col-md-2">
+                                        <select name="filter_by" class="form-select rounded-pill">
+                                            <option value="" disabled="disabled" selected="selected">Filter By</option>
+                                            <t t-foreach="filter_options" t-as="option">
+                                                <option t-att-value="option[0]"
+                                                        t-att-selected="'selected' if filter_by == option[0] else None">
+                                                    <t t-esc="option[1]"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <select name="sort_by" class="form-select rounded-pill">
+                                            <option value="" disabled="disabled" selected="selected">Sort By</option>
+                                            <t t-foreach="sort_options" t-as="option">
+                                                <option t-att-value="option[0]"
+                                                        t-att-selected="'selected' if sort_by == option[0] else None">
+                                                    <t t-esc="option[1]"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <select name="group_by" class="form-select rounded-pill">
+                                            <option value="" disabled="disabled" selected="selected">Group By</option>
+                                            <t t-foreach="group_options" t-as="option">
+                                                <option t-att-value="option[0]"
+                                                        t-att-selected="'selected' if group_by == option[0] else None">
+                                                    <t t-esc="option[1]"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <input type="text" name="search" class="form-control rounded-pill"
+                                               placeholder="Search loans..." t-att-value="search_query or ''"/>
+                                    </div>
+
+                                    <div class="col-md-2 d-flex align-items-end gap-2">
+                                        <button type="submit" class="btn btn-primary rounded-pill flex-grow-1">
+                                            <i class="fa fa-filter me-2"></i>Apply
+                                        </button>
+                                        <a href="/fetch/loans" class="btn btn-outline-secondary rounded-pill">
+                                            <i class="fa fa-refresh me-1"></i>Reset
+                                        </a>
+                                    </div>
+                                </form>
+
+                                <!-- Results Section -->
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <!-- No Results Message -->
+                                        <t t-if="not Loans">
+                                            <div class="alert alert-info text-center">
+                                                <i class="fa fa-info-circle"></i>
+                                                No loans found matching your criteria.
+                                            </div>
+                                        </t>
+
+                                        <!-- Grouped Results -->
+                                        <t t-if="group_by != 'all' and grouped_loans">
+                                            <t t-foreach="grouped_loans.items()" t-as="group_item">
+                                                <div class="card mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h5 class="mb-0">
+                                                            <i class="fa fa-folder-open"></i>
+                                                            <t t-esc="group_item[0]"/>
+                                                            <span class="badge badge-secondary ms-2">
+                                                                <t t-esc="len(group_item[1])"/> loans
+                                                            </span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <t t-call="bss_loan_advances_portal.loan_table_template">
+                                                            <t t-set="loans_data" t-value="group_item[1]"/>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+
+                                        <!-- Non-Grouped Results -->
+                                        <t t-if="group_by == 'all' and Loans">
+                                            <div class="card">
+                                                <div class="card-body p-0">
+                                                    <t t-call="bss_loan_advances_portal.loan_table_template">
+                                                        <t t-set="loans_data" t-value="Loans"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/><br/><br/>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center">
+                <a href="/my/home" class="btn btn-secondary me-2">Back</a>
+            </div>
+            <br/><br/><br/>
+
+            <!-- Loan Modals - Generated for each loan -->
+            <t t-if="Loans">
+                <t t-foreach="Loans" t-as="loan">
+                    <t t-call="bss_loan_advances_portal.loan_modal_template">
+                        <t t-set="loan_data" t-value="loan"/>
+                        <t t-set="loan_data_index" t-value="loan_index"/>
+                    </t>
+                </t>
+            </t>
+            <!-- Installment Modals for Normal Loans -->
+            <t t-if="Loans">
+                <t t-foreach="Loans" t-as="loan">
+                    <t t-call="bss_loan_advances_portal.installment_modal_template">
+                        <t t-set="loan_data" t-value="loan"/>
+                        <t t-set="loan_data_index" t-value="loan_index"/>
+                    </t>
+                </t>
+            </t>
+
+
+            <!-- For Grouped Loans -->
+            <t t-if="grouped_loans">
+                <t t-foreach="grouped_loans.values()" t-as="loan_group">
+                    <t t-foreach="loan_group" t-as="loan">
+                        <t t-call="bss_loan_advances_portal.loan_modal_template">
+                            <t t-set="loan_data" t-value="loan"/>
+                            <t t-set="loan_data_index" t-value="loan_index"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+            <!-- Installment Modals for Grouped Loans -->
+            <t t-if="grouped_loans">
+                <t t-foreach="grouped_loans.values()" t-as="loan_group">
+                    <t t-foreach="loan_group" t-as="loan">
+                        <t t-call="bss_loan_advances_portal.installment_modal_template">
+                            <t t-set="loan_data" t-value="loan"/>
+                            <t t-set="loan_data_index" t-value="loan_index"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+
+
+        </t>
+    </template>
+
+    <!-- Loan Table Template -->
+    <template id="loan_table_template" name="Loan Table">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Name</th>
+                        <th>Loan Type</th>
+                        <th>Request Date</th>
+                        <th>Borrower</th>
+                        <th>Amount</th>
+                        <th>Paid Amount</th>
+                        <th>Balance</th>
+                        <th>State</th>
+                        <th>View/Update</th>
+                        <t t-if="any(loan['state'] == 'approve' for loan in loans_data)">
+                            <th>Installments</th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="loans_data" t-as="loan">
+                        <tr>
+                            <td>
+                                <strong t-esc="loan['loan_name']"/>
+                            </td>
+                            <td>
+                                <strong>
+                                    <t t-esc="'Loan' if loan['loan_type'] == 'loan' else 'Advance'"/>
+                                </strong>
+                            </td>
+
+                            <td>
+                                <t t-esc="loan['request_date'].strftime('%d/%m/%Y') if loan['request_date'] else 'N/A'"/>
+                            </td>
+                            <td>
+                                <t t-esc="loan['employee_name']"/>
+                            </td>
+                            <td>
+                                <strong class="text-primary">
+                                    <t t-esc="'{:,.2f}'.format(loan['loan_amount'])"/>
+                                </strong>
+                            </td>
+                            <td>
+                                <span class="text-success">
+                                    <t t-esc="'{:,.2f}'.format(loan['total_paid_amount'])"/>
+                                </span>
+                            </td>
+                            <td>
+                                <span t-att-class="'text-danger' if loan['balance_amount'] > 0 else 'text-success'">
+                                    <t t-esc="'{:,.2f}'.format(loan['balance_amount'])"/>
+                                </span>
+                            </td>
+                            <td>
+                                <t t-set="state" t-value="loan['state']"/>
+                                <span t-if="state == 'approve'" class="badge bg-success">
+                                    Approved</span>
+                                <span t-elif="state == 'waiting_approval_1'" class="badge bg-primary">
+                                    Submitted</span>
+                                <span t-elif="state == 'waiting_approval_2'" class="badge bg-info text-dark">Waiting
+                                    Approval</span>
+                                <span t-elif="state == 'refuse'" class="badge bg-danger">
+                                    Refused</span>
+                                <span t-elif="state == 'cancel'" class="badge bg-secondary">
+                                    Cancelled</span>
+                                <span t-else="" class="badge bg-warning text-dark">Draft</span>
+                            </td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm rounded-circle"
+                                        data-bs-toggle="modal"
+                                        t-attf-data-bs-target="#loanModal{{loan.get('id', loan.get('loan_id', loan_index))}}">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-circle"
+                                        data-bs-toggle="modal"
+                                        t-attf-data-bs-target="#installmentModal{{loan.get('id', loan.get('loan_id', loan_index))}}">
+                                    <i class="fa fa-list-alt"></i>
+                                </button>
+                            </td>
+                            <t t-if="loan['state'] == 'approve'">
+
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <!-- Loan Installment Template -->
+    <template id="installment_modal_template" name="Installment Modal">
+        <t t-set="loan_id" t-value="loan_data.get('id', loan_data.get('loan_id', loan_data_index))"/>
+        <div class="modal fade" t-attf-id="installmentModal{{loan_id}}" tabindex="-1"
+             aria-labelledby="installmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="installmentModalLabel">
+                            <i class="fa fa-list-alt me-2"></i>Installment Details -
+                            <t t-esc="loan_data.get('loan_name', 'N/A')"/>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <t t-if="loan_data.get('loan_lines')">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="width: 33%;">Date</th>
+                                            <th class="text-center" style="width: 33%;">Amount</th>
+                                            <th class="text-center" style="width: 33%;">Paid</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <t t-foreach="loan_data.get('loan_lines', [])" t-as="line">
+                                            <tr>
+                                                <td class="text-center" style="width: 33%;">
+                                                    <t t-esc="line['next_installment_payment_date'].strftime('%d/%m/%Y') if line['next_installment_payment_date'] else 'N/A'"/>
+                                                </td>
+                                                <td class="text-center" style="width: 33%;">
+                                                    <t t-esc="'{:,.2f}'.format(line['amount'])"/>
+                                                </td>
+                                                <td class="text-center" style="width: 33%;">
+                                                    <t t-if="line['paid']">
+                                                        <i class="fa fa-check-circle text-success"></i>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <i class="fa fa-circle text-muted"></i>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+
+
+                                </table>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="alert alert-info text-center my-3">
+                                <i class="fa fa-info-circle me-2"></i>No installment data available.
+                            </div>
+                        </t>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fa fa-times me-1"></i>Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- Loan Modal Template -->
+    <template id="loan_modal_template" name="Loan Modal">
+        <t t-set="loan_id" t-value="loan_data.get('id', loan_data.get('loan_id', loan_data_index))"/>
+        <div class="modal fade" t-attf-id="loanModal{{loan_id}}" tabindex="-1" aria-labelledby="loanModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="loanModalLabel">
+                            <i class="fa fa-money me-2"></i>Loan Details - <t
+                                t-esc="loan_data.get('loan_name', 'N/A')"/>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <form t-attf-action="/update/loan/request/{{loan_id}}" method="POST">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Loan Name</strong></label>
+                                        <input type="text" class="form-control"
+                                               t-att-value="loan_data.get('loan_name', 'N/A')" readonly="readonly"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Loan Type</strong></label>
+                                        <select name="loan_type" class="form-select"
+                                                t-att-disabled="'disabled' if loan_data.get('state') != 'draft' else None">
+                                            <!-- placeholder/None option -->
+                                            <option value=""
+                                                    t-if="loan_data.get('loan_type') not in ['loan','advance']"
+                                                    t-att-selected="'selected'">
+                                                None
+                                            </option>
+
+                                            <!-- real options -->
+                                            <option value="loan"
+                                                    t-att-selected="'selected' if loan_data.get('loan_type') == 'loan' else None">
+                                                Loan
+                                            </option>
+                                            <option value="advance"
+                                                    t-att-selected="'selected' if loan_data.get('loan_type') == 'advance' else None">
+                                                Advance
+                                            </option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Loan Amount</strong></label>
+                                        <input type="number" name="loan_amount" class="form-control" step="0.01"
+                                               t-att-value="loan_data.get('loan_amount', 0)"
+                                               t-att-readonly="'readonly' if loan_data.get('state') != 'draft' else None"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Total Installments</strong></label>
+                                        <input type="number" name="no_of_emi" class="form-control"
+                                               t-att-value="loan_data.get('installment', 0)"
+                                               t-att-readonly="'readonly' if loan_data.get('state') != 'draft' else None"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Remaining Installments</strong></label>
+                                        <input type="number" name="remaining_installment" class="form-control"
+                                               t-att-value="loan_data.get('remaining_installment', 0)"
+                                               t-att-readonly="'readonly'"/>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Employee</strong></label>
+                                        <input type="text" class="form-control"
+                                               t-att-value="loan_data.get('employee_name', 'N/A')" readonly="readonly"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Request Date</strong></label>
+                                        <input type="text" class="form-control"
+                                               t-att-value="loan_data.get('request_date').strftime('%d/%m/%Y') if loan_data.get('request_date') else 'N/A'"
+                                               readonly="readonly"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Total Amount</strong></label>
+                                        <input type="text" class="form-control text-success"
+                                               t-att-value="'{:,.2f}'.format(loan_data.get('loan_amount', 0))"
+                                               readonly="readonly"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Paid Amount</strong></label>
+                                        <input type="text" class="form-control text-success"
+                                               t-att-value="'{:,.2f}'.format(loan_data.get('total_paid_amount', 0))"
+                                               readonly="readonly"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label"><strong>Balance Amount</strong></label>
+                                        <input type="text" class="form-control"
+                                               t-att-class="'form-control text-danger' if loan_data.get('balance_amount', 0) > 0 else 'form-control text-success'"
+                                               t-att-value="'{:,.2f}'.format(loan_data.get('balance_amount', 0))"
+                                               readonly="readonly"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Read-only notice for non-draft states -->
+                            <t t-if="loan_data.get('state') != 'draft'">
+                                <div class="alert alert-info">
+                                    <i class="fa fa-info-circle me-2"></i>
+                                    <strong>Note:</strong> This loan cannot be modified as it is in
+                                    <span t-if="loan_data.get('state') == 'approve'">approved</span>
+                                    <span t-elif="loan_data.get('state') == 'waiting_approval_1'">submitted</span>
+                                    <span t-elif="loan_data.get('state') == 'waiting_approval_2'">waiting
+                                        approval</span>
+                                    <span t-elif="loan_data.get('state') == 'refuse'">refused</span>
+                                    <span t-elif="loan_data.get('state') == 'cancel'">cancelled</span>
+                                    state.
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fa fa-times me-1"></i>Close
+                            </button>
+
+                            <!-- Update and Cancel buttons - only show for draft state -->
+                            <t t-if="loan_data.get('state') == 'draft'">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save me-1"></i>Update Loan
+                                </button>
+
+                                <button type="button" class="btn btn-danger" t-attf-onclick="cancelLoan({{loan_id}})">
+                                    <i class="fa fa-ban me-1"></i>Cancel Loan
+                                </button>
+                            </t>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function cancelLoan(loanId) {
+            if (confirm('Are you sure you want to cancel this loan request?')) {
+            // Create and submit form
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cancel/loan/request/' + loanId;
+
+            var csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = document.querySelector('input[name="csrf_token"]').value;
+            form.appendChild(csrfInput);
+
+            document.body.appendChild(form);
+            form.submit();
+            }
+            }
+        </script>
+    </template>
+
+    <!-- Optional: Add some custom CSS -->
+    <template id="loan_portal_assets" name="Loan Portal Assets">
+        <style>
+            .card {
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+                border: 1px solid rgba(0, 0, 0, 0.125);
+            }
+
+            .card-header {
+                background-color: #714B67;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            }
+
+            .table th {
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.875rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .btn-group-sm > .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .form-label {
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+            }
+
+            .input-group .btn {
+                border-color: #ced4da;
+            }
+
+            .alert {
+                border-radius: 0.375rem;
+            }
+
+            .rounded-pill {
+                border-radius: 50rem !important;
+            }
+
+            .modal-header.bg-primary {
+                background-color: #714B67 !important;
+            }
+
+            .modal-body .form-control[readonly] {
+                background-color: #f8f9fa;
+                opacity: 1;
+            }
+
+            .modal-body .form-select[disabled] {
+                background-color: #f8f9fa;
+                opacity: 1;
+            }
+
+            .fs-6 {
+                font-size: 1rem !important;
+            }
+        </style>
+
+        <script>
+            function cancelLoan(loanId) {
+            if (confirm('Are you sure you want to cancel this loan request?')) {
+            // Create a form to submit the cancel request
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cancel/loan/request/' + loanId;
+
+            // Add CSRF token
+
+            var csrfToken = document.createElement('input');
+            csrfToken.name = 'csrf_token';
+            csrfToken.type = 'hidden'
+
+
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrf_token';
+            csrfToken.value = odoo.csrf_token;
+            form.appendChild(csrfToken);
+
+            document.body.appendChild(form);
+            form.submit();
+            }
+            }
+        </script>
+    </template>
+</odoo>
+
+
