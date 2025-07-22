@@ -61,6 +61,9 @@ All submitted expenses are displayed for user review.
 Users can update expenses before approved status.
 Portal supports filtering expenses by last week, last month, or last year, and grouping expenses by status.
 
+## Leads Generation Portal
+A modern portal where users can generate CRM leads by entering opportunity details, contact info, source, tags and description.
+If the contact exists, the system attaches the lead to it — otherwise, a new contact is created. Upon successful submission, a confirmation modal with success status is shown.
 
 
 
