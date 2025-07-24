@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="my_details_custom_portal_id" name="Portal My Home : Time Off"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #e0ffe0; color: black; border-radius: 8px; padding: 10px;">
+                    <a href="/my/account" onclick="window.location.href='/my/account'; return false;"
+                       style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #2f4f4f; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                My Details
+                                <img src="/custom_portal_account_page/static/description/portal_icon.png"
+                                     alt="Time Off Icon"
+                                     style="width: 35px; height: 35px; margin-left: 30px;"/>
+                            </h4>
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #2a5d31;">My Details</span><br/>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="portal_my_details">
+        <t t-call="portal.portal_layout">
+            <t t-set="additional_title">Contact Details</t>
+            <div class="oe_structure"/>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Profile Picture Section -->
+                    <div class="col-lg-3 col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="position-relative d-inline-block">
+                                    <img t-att-src="image_data_uri(partner.image_1920)"
+                                         class="rounded-circle img-fluid mb-3 border border-2 border-light shadow-sm"
+                                         style="width: 180px; height: 180px; object-fit: cover;"
+                                         alt="Profile Picture" loading="lazy"/>
+                                    <!--                                    <button type="button"-->
+                                    <!--                                            class="btn btn-primary btn-sm position-absolute bottom-0 end-0 rounded-circle p-2"-->
+                                    <!--                                            data-bs-toggle="modal" data-bs-target="#profileModal"-->
+                                    <!--                                            style="transform: translate(25%, 25%);">-->
+                                    <!--                                        <i class="fa fa-camera"></i>-->
+                                    <!--                                    </button>-->
+                                </div>
+                                <h5 class="card-title mb-1" t-esc="partner.name"/>
+                                <p class="text-muted mb-3" t-esc="partner.email"/>
+                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#profileModal">
+                                    <i class="fa fa-edit me-2"></i>Change Picture
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="col-lg-9 col-md-8">
+                        <form action="/my/account" method="post" class="needs-validation" novalidate="true">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!-- Error Messages -->
+                            <div t-if="error_message" class="alert alert-danger alert-dismissible fade show"
+                                 role="alert">
+                                <strong>Please correct the following errors:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <t t-foreach="error_message" t-as="err">
+                                        <li t-esc="err"/>
+                                    </t>
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <!-- Basic Information Card -->
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-user me-2"></i>Basic Information
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <!-- Name -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="name">
+                                                Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text"
+                                                   name="name"
+                                                   id="name"
+                                                   t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
+                                                   t-att-value="name or partner.name"
+                                                   required="true"
+                                                   placeholder="Enter your full name"/>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid name.
+                                            </div>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="email">
+                                                Email <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="email"
+                                                   name="email"
+                                                   id="email"
+                                                   t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}"
+                                                   t-att-value="email or partner.email"
+                                                   required="true"
+                                                   placeholder="Enter your email address"/>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid email address.
+                                            </div>
+                                        </div>
+
+                                        <!-- Phone -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="phone">Phone</label>
+                                            <input type="tel"
+                                                   name="phone"
+                                                   id="phone"
+                                                   t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}"
+                                                   t-att-value="phone or partner.phone"
+                                                   placeholder="Enter your phone number"/>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid phone number.
+                                            </div>
+                                        </div>
+
+                                        <!-- City -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="city">City</label>
+                                            <input type="text"
+                                                   name="city"
+                                                   id="city"
+                                                   t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}"
+                                                   t-att-value="city or partner.city"
+                                                   placeholder="Enter your city"/>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid city name.
+                                            </div>
+                                        </div>
+
+                                        <!-- Country -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="country_id">Country</label>
+                                            <select name="country_id"
+                                                    id="country_id"
+                                                    t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}"
+                                                    onchange="updateStates(this.value)">
+                                                <option value="">Select Country...</option>
+                                                <t t-foreach="countries or []" t-as="country">
+                                                    <option t-att-value="country.id"
+                                                            t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
+                                                        <t t-esc="country.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a country.
+                                            </div>
+                                        </div>
+
+                                        <!-- State -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-bold" for="state_id">State / Province</label>
+                                            <select name="state_id"
+                                                    id="state_id"
+                                                    t-attf-class="form-select #{error.get('state_id') and 'is-invalid' or ''}">
+                                                <option value="">Select State...</option>
+                                                <t t-foreach="states or []" t-as="state">
+                                                    <option t-att-value="state.id"
+                                                            t-att-data-country_id="state.country_id.id"
+                                                            t-att-selected="state.id == partner.state_id.id"
+                                                            style="display: none;">
+                                                        <t t-esc="state.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a state.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-4"
+                                        style="background-color: #714B67; border-color: #714B67;">
+                                    <i class="fa fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Picture Modal -->
+            <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form action="/change/profile/" method="post" enctype="multipart/form-data"
+                              id="profileUploadForm">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="profileModalLabel">
+                                    <i class="fa fa-camera me-2"></i>Change Profile Picture
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="text-center mb-4">
+                                    <img t-att-src="image_data_uri(partner.image_1920)"
+                                         class="rounded-circle img-fluid border border-2 border-light shadow-sm"
+                                         style="width: 120px; height: 120px; object-fit: cover;"
+                                         alt="Current Profile Picture"
+                                         id="currentProfilePic"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="profileImageInput" class="form-label fw-bold">
+                                        Select New Picture
+                                    </label>
+                                    <input type="file"
+                                           name="attachment"
+                                           class="form-control"
+                                           id="profileImageInput"
+                                           accept="image/*"
+                                           onchange="previewImage(this)"/>
+                                    <div class="form-text">
+                                        <i class="fa fa-info-circle me-1"></i>
+                                        Accepted formats: JPG, PNG, GIF. Max size: 5MB
+                                    </div>
+                                </div>
+
+                                <div class="text-center" id="imagePreviewContainer" style="display: none;">
+                                    <p class="text-muted mb-2">Preview:</p>
+                                    <img id="imagePreview"
+                                         src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%23f8f9fa'/%3E%3C/svg%3E"
+                                         class="rounded-circle img-fluid border border-2 border-primary shadow-sm"
+                                         style="width: 120px; height: 120px; object-fit: cover;"
+                                         alt="Preview"/>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa fa-times me-2"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="uploadBtn" disabled="true">
+                                    <i class="fa fa-upload me-2"></i>Upload Picture
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript for enhanced functionality -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                // Form validation
+                const forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                }, false);
+                });
+
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+                });
+
+                // Country/State dropdown functionality
+                function updateStates(countryId) {
+                const stateSelect = document.getElementById('state_id');
+                const stateOptions = stateSelect.querySelectorAll('option');
+
+                // Hide all states first
+                stateOptions.forEach(option => {
+                if (option.value !== '') {
+                option.style.display = 'none';
+                option.selected = false;
+                }
+                });
+
+                // Show states for selected country
+                if (countryId) {
+                stateOptions.forEach(option => {
+                if (option.dataset.countryId === countryId) {
+                option.style.display = 'block';
+                }
+                });
+                }
+
+                // Reset state selection
+                stateSelect.value = '';
+                }
+
+                // Image preview functionality
+                function previewImage(input) {
+                const uploadBtn = document.getElementById('uploadBtn');
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const preview = document.getElementById('imagePreview');
+
+                if (input.files &amp;&amp; input.files[0]) {
+                const file = input.files[0];
+
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                showAlert('File size must be less than 5MB', 'danger');
+                input.value = '';
+                uploadBtn.disabled = true;
+                previewContainer.style.display = 'none';
+                return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                showAlert('Please select a valid image file', 'danger');
+                input.value = '';
+                uploadBtn.disabled = true;
+                previewContainer.style.display = 'none';
+                return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = 'block';
+                uploadBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+                } else {
+                previewContainer.style.display = 'none';
+                uploadBtn.disabled = true;
+                // Reset to placeholder
+                preview.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120'
+                height='120'%3E%3Crect width='120' height='120' fill='%23f8f9fa'/%3E%3C/svg%3E";
+                }
+                }
+
+                // Show alert function
+                function showAlert(message, type) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+                alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+
+                const modalBody = document.querySelector('#profileModal .modal-body');
+                const existingAlert = modalBody.querySelector('.alert');
+                if (existingAlert) {
+                existingAlert.remove();
+                }
+
+                modalBody.insertBefore(alertDiv, modalBody.firstChild);
+
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                if (alertDiv.parentNode) {
+                alertDiv.remove();
+                }
+                }, 5000);
+                }
+
+                // Initialize country/state on page load
+                document.addEventListener('DOMContentLoaded', function() {
+                const countrySelect = document.getElementById('country_id');
+                if (countrySelect.value) {
+                updateStates(countrySelect.value);
+                }
+
+                // Reset modal when closed
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal) {
+                profileModal.addEventListener('hidden.bs.modal', function() {
+                resetProfileModal();
+                });
+                }
+                });
+
+                // Reset profile modal function
+                function resetProfileModal() {
+                const form = document.getElementById('profileUploadForm');
+                const fileInput = document.getElementById('profileImageInput');
+                const uploadBtn = document.getElementById('uploadBtn');
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const preview = document.getElementById('imagePreview');
+                const existingAlert = document.querySelector('#profileModal .alert');
+
+                // Reset form
+                if (form) form.reset();
+
+                // Reset file input
+                if (fileInput) fileInput.value = '';
+
+                // Reset button state
+                if (uploadBtn) uploadBtn.disabled = true;
+
+                // Hide preview
+                if (previewContainer) previewContainer.style.display = 'none';
+
+                // Reset preview image
+                if (preview) {
+                preview.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120'
+                height='120'%3E%3Crect width='120' height='120' fill='%23f8f9fa'/%3E%3C/svg%3E";
+                }
+
+                // Remove any existing alerts
+                if (existingAlert) {
+                existingAlert.remove();
+                }
+                }
+            </script>
+
+            <!-- Additional CSS for better styling -->
+            <style>
+                .card {
+                    border: none;
+                    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+                    border-radius: 0.5rem;
+                }
+
+                .card-header {
+                    border-radius: 0.5rem 0.5rem 0 0 !important;
+                }
+
+                .form-control:focus, .form-select:focus {
+                    border-color: #0d6efd;
+                    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+                }
+
+                .btn-primary {
+                    background-color: #0d6efd;
+                    border-color: #0d6efd;
+                }
+
+                .btn-primary:hover {
+                    background-color: #0b5ed7;
+                    border-color: #0a58ca;
+                }
+
+                .modal-content {
+                    border-radius: 0.5rem;
+                }
+
+                .was-validated .form-control:valid,
+                .was-validated .form-select:valid {
+                    border-color: #198754;
+                }
+
+                .was-validated .form-control:invalid,
+                .was-validated .form-select:invalid {
+                    border-color: #dc3545;
+                }
+
+                @media (max-width: 768px) {
+                    .container-fluid {
+                        padding: 0.5rem;
+                    }
+
+                    .card-body {
+                        padding: 1rem;
+                    }
+                }
+            </style>
+        </t>
+    </template>
+</odoo>
