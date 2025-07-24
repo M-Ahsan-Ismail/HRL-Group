@@ -11,6 +11,7 @@
     "license": "LGPL-3",
     'data': [
         'views/lead_generation_controller_view.xml',
+        'views/dealer_dashboard_portal.xml',
 
     ], 'images': ['static/description/icon.png'],
 
