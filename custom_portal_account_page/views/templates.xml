@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="my_details_custom_portal_id" name="Portal My Home : Time Off"
               inherit_id="portal.portal_my_home">
         <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
             <div class="o_portal_docs">
                 <div class="box" style="cursor: pointer; width: 420px; height: 100px;
             background-color: #e0ffe0; color: black; border-radius: 8px; padding: 10px;">
-                    <a href="/my/account" onclick="window.location.href='/my/account'; return false;"
-                       style="display: block; text-decoration: none; color: black;">
+                    <a href="/my/account" style="display: block; text-decoration: none; color: black;">
                         <div class="o_portal_doc">
                             <h4 style="color: #2f4f4f; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
                                 My Details
@@ -43,12 +41,6 @@
                                          class="rounded-circle img-fluid mb-3 border border-2 border-light shadow-sm"
                                          style="width: 180px; height: 180px; object-fit: cover;"
                                          alt="Profile Picture" loading="lazy"/>
-                                    <!--                                    <button type="button"-->
-                                    <!--                                            class="btn btn-primary btn-sm position-absolute bottom-0 end-0 rounded-circle p-2"-->
-                                    <!--                                            data-bs-toggle="modal" data-bs-target="#profileModal"-->
-                                    <!--                                            style="transform: translate(25%, 25%);">-->
-                                    <!--                                        <i class="fa fa-camera"></i>-->
-                                    <!--                                    </button>-->
                                 </div>
                                 <h5 class="card-title mb-1" t-esc="partner.name"/>
                                 <p class="text-muted mb-3" t-esc="partner.email"/>
@@ -235,12 +227,12 @@
                                     <label for="profileImageInput" class="form-label fw-bold">
                                         Select New Picture
                                     </label>
+                                    <!-- FIXED: Removed onchange attribute and added event listener instead -->
                                     <input type="file"
                                            name="attachment"
                                            class="form-control"
                                            id="profileImageInput"
-                                           accept="image/*"
-                                           onchange="previewImage(this)"/>
+                                           accept="image/*"/>
                                     <div class="form-text">
                                         <i class="fa fa-info-circle me-1"></i>
                                         Accepted formats: JPG, PNG, GIF. Max size: 5MB
@@ -272,28 +264,8 @@
 
             <!-- JavaScript for enhanced functionality -->
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                // Form validation
-                const forms = document.querySelectorAll('.needs-validation');
-                Array.prototype.slice.call(forms).forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-                }, false);
-                });
-
-                // Initialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
-                });
-
-                // Country/State dropdown functionality
-                function updateStates(countryId) {
+                // FIXED: Define functions in global scope
+                window.updateStates = function(countryId) {
                 const stateSelect = document.getElementById('state_id');
                 const stateOptions = stateSelect.querySelectorAll('option');
 
@@ -316,10 +288,10 @@
 
                 // Reset state selection
                 stateSelect.value = '';
-                }
+                };
 
-                // Image preview functionality
-                function previewImage(input) {
+                // FIXED: Define previewImage function in global scope
+                window.previewImage = function(input) {
                 const uploadBtn = document.getElementById('uploadBtn');
                 const previewContainer = document.getElementById('imagePreviewContainer');
                 const preview = document.getElementById('imagePreview');
@@ -359,10 +331,10 @@
                 preview.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120'
                 height='120'%3E%3Crect width='120' height='120' fill='%23f8f9fa'/%3E%3C/svg%3E";
                 }
-                }
+                };
 
-                // Show alert function
-                function showAlert(message, type) {
+                // FIXED: Define showAlert function in global scope
+                window.showAlert = function(message, type) {
                 const alertDiv = document.createElement('div');
                 alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
                 alertDiv.innerHTML = `
@@ -384,26 +356,10 @@
                 alertDiv.remove();
                 }
                 }, 5000);
-                }
+                };
 
-                // Initialize country/state on page load
-                document.addEventListener('DOMContentLoaded', function() {
-                const countrySelect = document.getElementById('country_id');
-                if (countrySelect.value) {
-                updateStates(countrySelect.value);
-                }
-
-                // Reset modal when closed
-                const profileModal = document.getElementById('profileModal');
-                if (profileModal) {
-                profileModal.addEventListener('hidden.bs.modal', function() {
-                resetProfileModal();
-                });
-                }
-                });
-
-                // Reset profile modal function
-                function resetProfileModal() {
+                // FIXED: Define resetProfileModal function in global scope
+                window.resetProfileModal = function() {
                 const form = document.getElementById('profileUploadForm');
                 const fileInput = document.getElementById('profileImageInput');
                 const uploadBtn = document.getElementById('uploadBtn');
@@ -433,7 +389,49 @@
                 if (existingAlert) {
                 existingAlert.remove();
                 }
+                };
+
+                document.addEventListener('DOMContentLoaded', function() {
+                // Form validation
+                const forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
                 }
+                form.classList.add('was-validated');
+                }, false);
+                });
+
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+
+                // FIXED: Add event listener for file input instead of inline onchange
+                const profileImageInput = document.getElementById('profileImageInput');
+                if (profileImageInput) {
+                profileImageInput.addEventListener('change', function() {
+                window.previewImage(this);
+                });
+                }
+
+                // Initialize country/state on page load
+                const countrySelect = document.getElementById('country_id');
+                if (countrySelect &amp;&amp; countrySelect.value) {
+                window.updateStates(countrySelect.value);
+                }
+
+                // Reset modal when closed
+                const profileModal = document.getElementById('profileModal');
+                if (profileModal) {
+                profileModal.addEventListener('hidden.bs.modal', function() {
+                window.resetProfileModal();
+                });
+                }
+                });
             </script>
 
             <!-- Additional CSS for better styling -->
