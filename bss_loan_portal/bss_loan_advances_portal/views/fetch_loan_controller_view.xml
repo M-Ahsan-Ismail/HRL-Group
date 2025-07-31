@@ -232,9 +232,7 @@
                         <th>Balance</th>
                         <th>State</th>
                         <th>View/Update</th>
-                        <t t-if="any(loan['state'] == 'approve' for loan in loans_data)">
-                            <th>Installments</th>
-                        </t>
+                        <th>Installments</th>
                     </tr>
                 </thead>
                 <tbody>

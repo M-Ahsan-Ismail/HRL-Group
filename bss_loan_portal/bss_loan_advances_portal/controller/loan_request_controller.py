@@ -6,7 +6,8 @@ from odoo.http import request
 class LoanRequestController(http.Controller):
     @http.route('/loan/request', type='http', auth="user", website=True, csrf=True, methods=['POST', 'GET'])
     def loan_request(self, **kwargs):
-        employee_id = request.env['hr.employee'].search([('user_id', '=', request.env.uid),('company_id','=',request.env.user.company_id.id)], limit=1)
+        employee_id = request.env['hr.employee'].search(
+            [('user_id', '=', request.env.uid), ('company_id', '=', request.env.user.company_id.id)], limit=1)
         if not employee_id:
             raise ValidationError('User Must Be Employee...!')
         company_id = employee_id.company_id
@@ -22,6 +23,7 @@ class LoanRequestController(http.Controller):
                 'installment': int(kwargs.get('no_of_emi')),
                 'date': fields.Datetime.now(),
                 'company_id': company_id.id,
+                'employee_id': employee_id.id,  # ✅ This was missing
             }
 
             loan_id = request.env['hr.loan'].create(vals)
