@@ -1,0 +1,828 @@
+<odoo>
+
+    <template id="mrp_portal_dashboard_button_id" name="Portal My Home: DashBoard View"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="card o_portal_doc_entry border-0 shadow-sm modern-dashboard-card"
+                     style="max-width: 420px; height: 140px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; border-radius: 20px !important; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; border: none !important;">
+
+                    <!-- Animated Background Pattern -->
+                    <div class="card-pattern"
+                         style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: radial-gradient(circle at 20% 50%, white 2px, transparent 2px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 30px 30px, 20px 20px;"></div>
+
+                    <!-- Floating Dashboard Icon -->
+                    <div class="dashboard-icon-wrapper"
+                         style="position: absolute; top: 16px; right: 16px; width: 48px; height: 48px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s ease;">
+                        <i class="fas fa-chart-pie" style="color: white; font-size: 20px; opacity: 0.9;"></i>
+                    </div>
+
+                    <!-- Clickable Link -->
+                    <a t-att-href="'/mrp/orders/dashboard'"
+                       class="text-decoration-none d-block h-100 position-relative" style="z-index: 2;">
+                        <div class="card-body d-flex flex-column justify-content-center p-4">
+                            <!-- Main Content -->
+                            <div class="dashboard-content">
+                                <!-- Title with Icon -->
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="title-icon me-3"
+                                         style="width: 12px; height: 12px; background: rgba(255, 255, 255, 0.8); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                                    <h4 class="mb-0 dashboard-title"
+                                        style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 700; font-size: 22px; color: #FFFFFF; letter-spacing: -0.5px; line-height: 1.2;">
+                                        Manufacturing Dashboard
+                                    </h4>
+                                </div>
+
+                                <!-- Subtitle with Enhanced Styling -->
+                                <p class="mb-2 dashboard-subtitle"
+                                   style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255, 255, 255, 0.8); margin-left: 24px;">
+                                    Real-time Control Center
+                                </p>
+
+                                <!-- Action Indicator -->
+                                <div class="action-indicator d-flex align-items-center" style="margin-left: 24px;">
+                                    <span style="font-size: 12px; color: rgba(255, 255, 255, 0.7); font-weight: 500;">
+                                        View Dashboard
+                                    </span>
+                                    <i class="fas fa-arrow-right ms-2"
+                                       style="color: rgba(255, 255, 255, 0.7); font-size: 12px; transition: transform 0.3s ease;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Hover Shine Effect -->
+                    <div class="shine-effect"
+                         style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.6s ease; pointer-events: none;"></div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Enhanced CSS for Modern Design -->
+        <xpath expr="." position="inside">
+            <style>
+                /* Force override Odoo's default card styles */
+                .modern-dashboard-card.card {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    background-color: transparent !important;
+                    border: none !important;
+                    border-radius: 20px !important;
+                }
+
+                .modern-dashboard-card .card-body {
+                    background: transparent !important;
+                    background-color: transparent !important;
+                }
+
+                .modern-dashboard-card {
+                    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    cursor: pointer;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                }
+
+                .modern-dashboard-card:hover {
+                    transform: translateY(-8px) scale(1.02);
+                    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3) !important;
+                }
+
+                .modern-dashboard-card:hover .shine-effect {
+                    left: 100%;
+                }
+
+                .modern-dashboard-card:hover .dashboard-icon-wrapper {
+                    transform: rotate(10deg) scale(1.1);
+                    background: rgba(255, 255, 255, 0.25);
+                }
+
+                .modern-dashboard-card:hover .action-indicator i {
+                    transform: translateX(4px);
+                }
+
+                .dashboard-title {
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                .dashboard-subtitle {
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+
+                @keyframes pulse {
+                    0%, 100% {
+                        opacity: 0.8;
+                        transform: scale(1);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.2);
+                    }
+                }
+
+                /* Responsive Design */
+                @media (max-width: 768px) {
+                    .modern-dashboard-card {
+                        max-width: 100% !important;
+                        height: 120px !important;
+                    }
+
+                    .dashboard-title {
+                        font-size: 20px !important;
+                    }
+
+                    .dashboard-subtitle {
+                        font-size: 13px !important;
+                    }
+                }
+
+                /* Loading Animation */
+                .card-pattern {
+                    animation: float 6s ease-in-out infinite;
+                }
+
+                @keyframes float {
+                    0%, 100% {
+                        transform: translateY(0px);
+                    }
+                    50% {
+                        transform: translateY(-2px);
+                    }
+                }
+
+                /* Override any Bootstrap or Odoo card defaults */
+                .o_portal_docs .card.modern-dashboard-card {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    background-color: transparent !important;
+                }
+
+                .o_portal_docs .modern-dashboard-card * {
+                    background-color: transparent !important;
+                }
+
+                /* Accessibility */
+                .modern-dashboard-card:focus-within {
+                    outline: 3px solid rgba(255, 255, 255, 0.5);
+                    outline-offset: 2px;
+                }
+            </style>
+        </xpath>
+    </template>
+
+
+    <template id="mrp_orders_admin_dashboard_id" name="MRP Dashboard">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_portal_wrap">
+                <!-- External CSS Dependencies -->
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+                <!-- Updated CSS with Soft Rounded Design -->
+                <style>
+                    :root {
+                        --primary-color: #4776E6;
+                        --secondary-color: #8E54E9;
+                        --success-color: #28a745;
+                        --info-color: #17a2b8;
+                        --warning-color: #ffc107;
+                        --danger-color: #dc3545;
+                        --border-radius: 16px;
+                        --border-radius-lg: 20px;
+                        --border-radius-pill: 50px;
+                        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+                        --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+                        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+                    }
+
+                    body {
+                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                        background: #f8f9fc;
+                    }
+
+                    .text-gradient {
+                        background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+
+                    .card {
+                        border-radius: var(--border-radius);
+                        border: none;
+                        box-shadow: var(--shadow-sm);
+                        transition: all 0.3s ease;
+                        overflow: hidden;
+                    }
+
+                    .card:hover {
+                        box-shadow: var(--shadow-md);
+                        transform: translateY(-2px);
+                    }
+
+                    .rounded-lg {
+                        border-radius: var(--border-radius-lg) !important;
+                    }
+
+                    .rounded-pill {
+                        border-radius: var(--border-radius-pill) !important;
+                    }
+
+                    .stat-card {
+                        transition: transform 0.3s ease;
+                        overflow: hidden;
+                    }
+
+                    .stat-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: var(--shadow-lg);
+                    }
+
+                    .stat-icon {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 12px;
+                        color: white;
+                        font-size: 1.2rem;
+                    }
+
+                    .stat-title {
+                        color: #6c757d;
+                        font-size: 0.9rem;
+                        margin-bottom: 0.25rem;
+                        font-weight: 500;
+                    }
+
+                    .stat-value {
+                        font-weight: 700;
+                        font-size: 1.8rem;
+                        color: #2d3748;
+                    }
+
+                    .form-control, .form-select {
+                        border: 2px solid #e9ecef;
+                        border-radius: var(--border-radius-pill);
+                        padding: 0.75rem 1.25rem;
+                        font-size: 0.95rem;
+                        transition: all 0.3s ease;
+                        background: white;
+                    }
+
+                    .form-control:focus, .form-select:focus {
+                        border-color: var(--primary-color);
+                        box-shadow: 0 0 0 0.2rem rgba(71, 118, 230, 0.15);
+                        outline: none;
+                    }
+
+                    .btn {
+                        border-radius: var(--border-radius-pill);
+                        font-weight: 600;
+                        padding: 0.75rem 1.5rem;
+                        transition: all 0.3s ease;
+                        border: none;
+                    }
+
+                    .btn:hover {
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-md);
+                    }
+
+                    .btn-primary {
+                        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    }
+
+                    .btn-outline-secondary {
+                        border: 2px solid #e9ecef;
+                        color: #6c757d;
+                        background: white;
+                    }
+
+                    .btn-outline-secondary:hover {
+                        background: #f8f9fa;
+                        border-color: #dee2e6;
+                        color: #495057;
+                    }
+
+                    .applicant-avatar {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        overflow: hidden;
+                    }
+
+                    .avatar-placeholder {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                        color: white;
+                        border-radius: 50%;
+                        font-size: 1rem;
+                        box-shadow: var(--shadow-sm);
+                    }
+
+                    .table {
+                        border-radius: var(--border-radius);
+                        overflow: hidden;
+                    }
+
+                    .table > :not(caption) > * > * {
+                        padding: 1rem 0.75rem;
+                        border-bottom: 1px solid #f1f3f4;
+                    }
+
+                    .table thead th {
+                        background: #f8f9fc;
+                        border: none;
+                        font-weight: 600;
+                        color: #4a5568;
+                        font-size: 0.9rem;
+                    }
+
+                    .table tbody tr {
+                        transition: all 0.2s ease;
+                    }
+
+                    .table tbody tr:hover {
+                        background: rgba(71, 118, 230, 0.05);
+                        transform: scale(1.002);
+                    }
+
+                    .badge {
+                        border-radius: var(--border-radius-pill);
+                        padding: 0.5rem 1rem;
+                        font-weight: 500;
+                        font-size: 0.8rem;
+                    }
+
+                    .empty-state {
+                        padding: 3rem 2rem;
+                        text-align: center;
+                        color: #6c757d;
+                    }
+
+                    .empty-state i {
+                        animation: pulse 2s infinite;
+                    }
+
+                    @keyframes pulse {
+                        0%, 100% {
+                            opacity: 0.5;
+                        }
+                        50% {
+                            opacity: 1;
+                        }
+                    }
+
+                    .table-responsive::-webkit-scrollbar {
+                        height: 8px;
+                    }
+
+                    .table-responsive::-webkit-scrollbar-track {
+                        background: #f1f3f4;
+                        border-radius: 10px;
+                    }
+
+                    .table-responsive::-webkit-scrollbar-thumb {
+                        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+                        border-radius: 10px;
+                    }
+
+                    .table-responsive::-webkit-scrollbar-thumb:hover {
+                        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+                    }
+
+                    @media (max-width: 768px) {
+                        .stat-card {
+                            margin-bottom: 1rem;
+                        }
+
+                        .card-body {
+                            padding: 1.5rem;
+                        }
+                    }
+                </style>
+
+                <!-- Fixed JavaScript -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    console.log('Dashboard loaded');
+
+                    const form = document.getElementById('filter-form');
+                    if (form) {
+                    console.log('Form found');
+
+                    form.addEventListener('submit', function(e) {
+                    console.log('Form submit triggered');
+
+                    // Get form data
+                    const formData = new FormData(form);
+                    const params = new URLSearchParams();
+
+                    // Build query parameters
+                    for (let [key, value] of formData.entries()) {
+                    if (value &amp;&amp; value.trim() !== '') {
+                    params.append(key, value);
+                    console.log(`Adding parameter: ${key} = ${value}`);
+                    }
+                    }
+
+                    // Construct URL
+                    const baseUrl = '/mrp/orders/dashboard';
+                    const queryString = params.toString();
+                    const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+
+                    console.log('Redirecting to:', finalUrl);
+
+                    // Redirect to the new URL
+                    window.location.href = finalUrl;
+
+                    // Prevent default form submission
+                    e.preventDefault();
+                    return false;
+                    });
+                    } else {
+                    console.error('Form not found!');
+                    }
+
+                    // Add change event listeners for debugging
+                    const inputs = form.querySelectorAll('input, select');
+                    inputs.forEach(input => {
+                    input.addEventListener('change', function() {
+                    console.log(`${this.name} changed to: ${this.value}`);
+                    });
+                    });
+                    });
+                </script>
+
+                <!-- Main Content -->
+                <div class="container mt-4">
+                    <!-- Header Section -->
+                    <div class="row mb-4">
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-lg overflow-hidden">
+                                <!-- Header Content -->
+                                <div class="card-body p-5 text-white position-relative"
+                                     style="background: linear-gradient(135deg, #714B67 0%, #714B67 100%);">
+
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="bg-white bg-opacity-20 rounded-3 p-3 me-3">
+                                                    <i class="fa fa-chart-line text-black" style="font-size: 2rem;"></i>
+                                                </div>
+
+
+                                                <div>
+                                                    <h1 class="text-white fw-bold mb-1"
+                                                        style="font-size: 2.5rem; letter-spacing: -1px;">
+                                                        Manufacturing Analytics
+                                                    </h1>
+                                                    <p class="text-white-50 mb-0 fs-5">
+                                                        <i class="fa fa-bolt me-2 text-white"></i>Real-time Production
+                                                        Insights
+                                                        &amp; Control Center
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modern Filter Controls -->
+                                <div class="bg-white">
+                                    <form action="/mrp/orders/dashboard" method="GET" class="p-4" id="filter-form">
+                                        <div class="row g-4 align-items-end">
+                                            <!-- Responsible Filter -->
+                                            <div class="col-lg-4 col-md-6">
+                                                <label class="form-label text-dark fw-semibold mb-2">
+                                                    <i class="fa fa-user text-primary me-2"></i>Responsible Person
+                                                </label>
+                                                <select name="responsible_user"
+                                                        class="form-select border-2 border-light"
+                                                        style="border-radius: 12px; padding: 0.75rem 1rem; background-color: #f8f9fa;">
+                                                    <option value="">All Responsible Users</option>
+                                                    <t t-foreach="res_users" t-as="user">
+                                                        <option t-att-value="user['id']"
+                                                                t-att-selected="kwargs.get('responsible_user') == str(user['id']) and 'selected' or None">
+                                                            <t t-esc="user['name']"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+
+                                            <!-- State Filter -->
+                                            <div class="col-lg-4 col-md-6">
+                                                <label class="form-label text-dark fw-semibold mb-2">
+                                                    <i class="fa fa-filter text-primary me-2"></i>Production Status
+                                                </label>
+                                                <select name="state" class="form-select border-2 border-light"
+                                                        style="border-radius: 12px; padding: 0.75rem 1rem; background-color: #f8f9fa;">
+                                                    <option value=""
+                                                            t-att-selected="not kwargs.get('state') and 'selected' or None">
+                                                        All Manufacturing Orders
+                                                    </option>
+                                                    <option value="draft"
+                                                            t-att-selected="kwargs.get('state') == 'draft' and 'selected' or None">
+                                                        📋 Draft
+                                                    </option>
+                                                    <option value="confirmed"
+                                                            t-att-selected="kwargs.get('state') == 'confirmed' and 'selected' or None">
+                                                        ✅ Confirmed
+                                                    </option>
+                                                    <option value="progress"
+                                                            t-att-selected="kwargs.get('state') == 'progress' and 'selected' or None">
+                                                        ⚙️ In Progress
+                                                    </option>
+                                                    <option value="to_close"
+                                                            t-att-selected="kwargs.get('state') == 'to_close' and 'selected' or None">
+                                                        🔒 To Close
+                                                    </option>
+                                                    <option value="done"
+                                                            t-att-selected="kwargs.get('state') == 'done' and 'selected' or None">
+                                                        🏁 Completed
+                                                    </option>
+                                                    <option value="cancel"
+                                                            t-att-selected="kwargs.get('state') == 'cancel' and 'selected' or None">
+                                                        ❌ Cancelled
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Action Buttons -->
+                                            <div class="col-lg-4 col-md-12">
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary flex-grow-1"
+                                                            style="border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; height: 50px;">
+                                                        <i class="fa fa-search me-2"></i>Apply Filters
+                                                    </button>
+                                                    <a href="/mrp/orders/dashboard"
+                                                       class="btn btn-outline-secondary"
+                                                       style="border-radius: 12px; border: 2px solid #dee2e6; height: 50px; display: flex; align-items: center; justify-content: center; min-width: 120px;">
+                                                        <i class="fa fa-undo me-1"></i>Clear All
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Quick Filter Pills -->
+                                        <div class="row mt-4">
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                                    <span class="text-dark fw-semibold me-3">Quick Filters:</span>
+
+                                                    <!-- In Progress -->
+                                                    <t t-set="is_active" t-value="kwargs.get('state') == 'progress'"/>
+                                                    <a href="/mrp/orders/dashboard?state=progress"
+                                                       t-attf-class="badge rounded-pill px-3 py-2 text-decoration-none #{'bg-black text-white' if is_active else 'bg-light text-dark'}">
+                                                        <i class="fa fa-cogs me-1"></i>In Progress
+                                                    </a>
+
+                                                    <!-- Confirmed -->
+                                                    <t t-set="is_active" t-value="kwargs.get('state') == 'confirmed'"/>
+                                                    <a href="/mrp/orders/dashboard?state=confirmed"
+                                                       t-attf-class="badge rounded-pill px-3 py-2 text-decoration-none #{'bg-primary text-white' if is_active else 'bg-light text-dark'}">
+                                                        <i class="fa fa-check me-1"></i>Confirmed
+                                                    </a>
+
+                                                    <!-- Completed -->
+                                                    <t t-set="is_active" t-value="kwargs.get('state') == 'done'"/>
+                                                    <a href="/mrp/orders/dashboard?state=done"
+                                                       t-attf-class="badge rounded-pill px-3 py-2 text-decoration-none #{'text-white'} #{'bg-success' if is_active else 'bg-light text-dark'}"
+                                                       t-att-style="is_active and 'background: linear-gradient(135deg, #667eea, #764ba2);' or ''">
+                                                        <i class="fa fa-flag-checkered me-1"></i>Completed
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-secondary">
+                                            <i class="fa fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Planned</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len([x for x in mrp_list if x.get('state') == 'draft'])"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon bg-success">
+                                            <i class="fa fa-check-circle"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Confirmed</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len([x for x in mrp_list if x.get('state') == 'confirmed'])"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon"
+                                             style="background: linear-gradient(135deg, #17a2b8, #20c997);">
+                                            <i class="fa fa-cogs"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">In Progress</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len([x for x in mrp_list if x.get('state') == 'progress'])"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon"
+                                             style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                            <i class="fa fa-flag-checkered"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Finished</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len([x for x in mrp_list if x.get('state') == 'done'])"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card border-0 shadow-sm rounded-lg h-100 stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon"
+                                             style="background: linear-gradient(135deg, #dc3545, #c82333);">
+                                            <i class="fa fa-ban"></i>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="stat-title">Cancelled</h6>
+                                            <h3 class="stat-value mb-0">
+                                                <t t-esc="len([x for x in mrp_list if x.get('state') == 'cancel'])"/>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Display Section -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-sm rounded-lg">
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="ps-4">Production Order</th>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Stage</th>
+                                                    <th>View</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="mrp_list">
+                                                    <tr t-foreach="mrp_list" t-as="item">
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="applicant-avatar me-3">
+                                                                    <t t-if="item.get('image')">
+                                                                        <img t-att-src="'data:image/png;base64,' + item['image']"
+                                                                             class="rounded-circle" width="40"
+                                                                             height="40"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="avatar-placeholder">
+                                                                            <i class="fa fa-user"></i>
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                                <div>
+                                                                    <h6 class="mb-0 fw-semibold">
+                                                                        <t t-esc="item.get('name', 'N/A')"/>
+                                                                    </h6>
+                                                                    <small class="text-muted">PO</small>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="fw-medium">
+                                                                <t t-esc="item.get('product', 'N/A')"/>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="text-muted">
+                                                                <t t-esc="item.get('ordered_qty')"/>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <!-- Planned -->
+                                                            <span t-if="item.get('state') == 'draft'"
+                                                                  class="badge rounded-pill bg-white text-white">
+                                                                Planned
+                                                            </span>
+
+                                                            <!-- Confirmed -->
+                                                            <span t-if="item.get('state') == 'confirmed'"
+                                                                  class="badge rounded-pill bg-white text-white">
+                                                                Confirmed
+                                                            </span>
+
+                                                            <!-- In Progress -->
+                                                            <span t-if="item.get('state') == 'progress'"
+                                                                  class="badge rounded-pill bg-white text-white">
+                                                                In Progress
+                                                            </span>
+
+                                                            <!-- Finished (gradient style) -->
+                                                            <span t-if="item.get('state') == 'done'"
+                                                                  class="badge rounded-pill bg-white text-white">
+                                                                Finished
+                                                            </span>
+
+                                                            <!-- Cancelled -->
+                                                            <span t-if="item.get('state') == 'cancel'"
+                                                                  class="badge rounded-pill bg-white text-white">
+                                                                Cancelled
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <a t-att-href="'/mrp/orders/details/' + str(item.get('id'))"
+                                                               class="btn btn-outline-secondary rounded-pill btn-sm d-flex align-items-center justify-content-center gap-2"
+                                                               style="padding: 0.5rem 1rem; font-size: 0.85rem; border: 2px solid #e9ecef; transition: all 0.3s ease;"
+                                                               title="View Details">
+                                                                <i class="fa fa-eye" style="font-size: 0.9rem;"></i>
+                                                                <span>View</span>
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+                                                </t>
+                                                <t t-else="">
+                                                    <tr>
+                                                        <td colspan="6" class="text-center py-5">
+                                                            <div class="empty-state">
+                                                                <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
+                                                                <h5 class="fw-bold text-muted">No Records Found</h5>
+                                                                <p class="text-muted">There are no Mo's
+                                                                    for the selected criteria.</p>
+                                                                <a href="/mrp/orders/dashboard"
+                                                                   class="btn btn-primary rounded-pill">
+                                                                    <i class="fa fa-refresh me-2"></i>Reset Filters
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

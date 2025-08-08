@@ -1,0 +1,1 @@
+from . import mrp_orders_dashboard_controller

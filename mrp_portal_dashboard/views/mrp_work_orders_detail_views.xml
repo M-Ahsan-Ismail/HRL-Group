@@ -1,0 +1,382 @@
+<odoo>
+    <template id="mrp_order_details" name="Manufacturing Order Details">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_portal_wrap">
+                <!-- External CSS Dependencies -->
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+                <!-- Bootstrap CSS for tabs -->
+                <link rel="stylesheet"
+                      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"/>
+
+                <!-- CSS (unchanged from your Odoo-oriented visuals) -->
+                <style>
+                    :root {
+                        --odoo-primary: #714B67; /* Odoo purple */
+                        --odoo-secondary: #714B67; /* Lighter Odoo purple */
+                        --border-radius: 16px;
+                        --border-radius-pill: 50px;
+                        --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+                        --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+                    }
+
+                    body {
+                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                        background: #f8f9fc;
+                    }
+
+                    .card {
+                        border-radius: var(--border-radius);
+                        border: 1px solid rgba(0, 0, 0, 0.05);
+                        box-shadow: var(--shadow-sm);
+                        transition: all 0.3s ease;
+                    }
+
+                    .card:hover {
+                        box-shadow: var(--shadow-md);
+                        transform: translateY(-2px);
+                    }
+
+                    .btn-primary {
+                        background: linear-gradient(135deg, var(--odoo-primary) 0%, var(--odoo-secondary) 100%);
+                        border-radius: var(--border-radius-pill);
+                        padding: 0.75rem 1.5rem;
+                        border: none;
+                        color: white;
+                        transition: all 0.3s ease;
+                    }
+
+                    .btn-primary:hover {
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-md);
+                        background: linear-gradient(135deg, var(--odoo-secondary) 0%, var(--odoo-primary) 100%);
+                    }
+
+                    .detail-label {
+                        font-weight: 600;
+                        color: #6c757d;
+                        font-size: 0.9rem;
+                    }
+
+                    .detail-value {
+                        font-size: 1.1rem;
+                        color: #2d3748;
+                        font-weight: 500;
+                    }
+
+                    .badge {
+                        border-radius: var(--border-radius-pill);
+                        padding: 0.5rem 1rem;
+                        font-weight: 600;
+                        font-size: 0.85rem;
+                        text-transform: capitalize;
+                    }
+
+                    /* Tab styling */
+                    .nav-tabs {
+                        border-bottom: 2px solid #e9ecef;
+                    }
+
+                    .nav-tabs .nav-link {
+                        color: #6c757d;
+                        font-weight: 500;
+                        border-radius: var(--border-radius) var(--border-radius) 0 0;
+                        padding: 0.75rem 1.5rem;
+                        background: #f0f0f0;
+                        transition: all 0.3s ease;
+                    }
+
+                    .nav-tabs .nav-link.active {
+                        background: linear-gradient(135deg, var(--odoo-primary) 0%, var(--odoo-secondary) 100%);
+                        color: white;
+                        border-color: transparent;
+                    }
+
+                    .nav-tabs .nav-link:hover {
+                        background: #e0d8de;
+                        border-color: transparent;
+                        color: var(--odoo-primary);
+                    }
+
+                    .tab-content {
+                        padding: 2rem;
+                        background: white;
+                        border-radius: 0 0 var(--border-radius) var(--border-radius);
+                        box-shadow: var(--shadow-sm);
+                    }
+
+                    /* Table enhancements */
+                    .table th {
+                        background-color: #f8f9fc;
+                        font-weight: 600;
+                        color: #2d3748;
+                    }
+
+                    .table tbody tr:nth-child(odd) {
+                        background-color: #f9fafb;
+                    }
+
+                    .table tbody tr:hover {
+                        background-color: #e9ecef;
+                    }
+
+                    /* Loading spinner */
+                    .loading-spinner {
+                        display: none;
+                        text-align: center;
+                        padding: 2rem;
+                    }
+
+                    /* Header background for Manufacturing Order Details */
+                    .header-section {
+                        background: linear-gradient(135deg, var(--odoo-primary) 0%, var(--odoo-secondary) 100%);
+                        padding: 1rem 1.5rem;
+                        border-radius: var(--border-radius) var(--border-radius) 0 0;
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 2rem;
+                    }
+                </style>
+
+                <!-- Main Content -->
+                <div class="container mt-5 mb-5">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">
+                            <div class="card border-0 shadow-sm rounded-lg animate__animated animate__fadeIn">
+                                <div class="header-section">
+                                    <i class="fa fa-industry me-3" style="font-size: 2rem;"></i>
+                                    <h1 class="mb-0 fw-bold" style="font-size: 2rem;">
+                                        Manufacturing Order Details
+                                    </h1>
+                                </div>
+                                <div class="card-body p-5">
+                                    <t t-if="mrp_order">
+                                        <div class="row g-4">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Ordered Quantity:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('ordered_qty', 'N/A')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Produced Quantity:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('produced_qty', 'N/A')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Bill of Material:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('bill_of_material', 'N/A')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Start Date:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('date_start', 'N/A')"
+                                                           t-options='{"widget": "date", "format": "yyyy-MM-dd"}'/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">End Date:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('date_end', 'N/A')"
+                                                           t-options='{"widget": "date", "format": "yyyy-MM-dd"}'/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Components Availability:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('components_availability', 'N/A')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <span class="detail-label">Responsible User:</span>
+                                                    <p class="detail-value mb-0">
+                                                        <t t-esc="mrp_order.get('user_id', 'N/A')"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tabs for Components, Work Centers, and Miscellaneous -->
+                                        <ul class="nav nav-tabs mt-5" id="mrpTabs" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="components-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#components" type="button" role="tab"
+                                                        aria-controls="components" aria-selected="true">
+                                                    Components
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="work-centers-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#work-centers" type="button" role="tab"
+                                                        aria-controls="work-centers" aria-selected="false">
+                                                    Work Centers
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="miscellaneous-tab" data-bs-toggle="tab"
+                                                        data-bs-target="#miscellaneous" type="button" role="tab"
+                                                        aria-controls="miscellaneous" aria-selected="false">
+                                                    Miscellaneous
+                                                </button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content animate__animated animate__fadeIn" id="mrpTabContent">
+                                            <!-- Components Tab -->
+                                            <div class="tab-pane fade show active" id="components" role="tabpanel"
+                                                 aria-labelledby="components-tab">
+                                                <div class="loading-spinner">
+                                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                                    <p class="text-muted">Loading components...</p>
+                                                </div>
+                                                <t t-if="mrp_order.get('components')">
+                                                    <table class="table table-hover mt-3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Product Name</th>
+                                                                <th scope="col">To Consume</th>
+                                                                <th scope="col">Quantity</th>
+                                                                <th scope="col">Consumed</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <t t-foreach="mrp_order.get('components', [])"
+                                                               t-as="component">
+                                                                <tr>
+                                                                    <td><t t-esc="component.get('component_product_name', 'N/A')"/></td>
+                                                                    <td><t t-esc="component.get('component_to_consume', 'N/A')"/></td>
+                                                                    <td><t t-esc="component.get('component_quantity', 'N/A')"/></td>
+                                                                    <td>
+                                                                        <span t-att-class="'badge bg-' + ('success' if component.get('component_consumed') else 'warning')">
+                                                                            <t t-esc="component.get('component_consumed', False) and 'Yes' or 'No'"/>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </t>
+                                                <t t-else="">
+                                                    <p class="text-muted mt-3">No components available.</p>
+                                                </t>
+                                            </div>
+                                            <!-- Work Centers Tab -->
+                                            <div class="tab-pane fade" id="work-centers" role="tabpanel"
+                                                 aria-labelledby="work-centers-tab">
+                                                <div class="loading-spinner">
+                                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                                    <p class="text-muted">Loading work centers...</p>
+                                                </div>
+                                                <t t-if="mrp_order.get('work_centers')">
+                                                    <table class="table table-hover mt-3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Operation</th>
+                                                                <th scope="col">Work Center</th>
+                                                                <th scope="col">Product</th>
+                                                                <th scope="col">Quantity Remaining</th>
+                                                                <th scope="col">Expected Duration</th>
+                                                                <th scope="col">Real Duration</th>
+                                                                <th scope="col">State</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <t t-foreach="mrp_order.get('work_centers', [])"
+                                                               t-as="work_center">
+                                                                <tr>
+                                                                    <td><t t-esc="work_center.get('wc_operation_name', 'N/A')"/></td>
+                                                                    <td><t t-esc="work_center.get('work_center', 'N/A')"/></td>
+                                                                    <td><t t-esc="work_center.get('wc_product_name', 'N/A')"/></td>
+                                                                    <td><t t-esc="work_center.get('wc_quantity_remaining', 'N/A')"/></td>
+                                                                    <td><t t-esc="work_center.get('wc_expected_duration', 'N/A')"/></td>
+                                                                    <td><t t-esc="work_center.get('wc_real_duration', 'N/A')"/></td>
+                                                                    <td>
+                                                                        <span t-att-class="'badge bg-' + ('success' if work_center.get('wc_state') == 'done' else 'info' if work_center.get('wc_state') == 'progress' else 'warning')">
+                                                                            <t t-esc="work_center.get('wc_state', 'N/A')"/>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </t>
+                                                <t t-else="">
+                                                    <p class="text-muted mt-3">No work centers available.</p>
+                                                </t>
+                                            </div>
+                                            <!-- Miscellaneous Tab -->
+                                            <div class="tab-pane fade" id="miscellaneous" role="tabpanel"
+                                                 aria-labelledby="miscellaneous-tab">
+                                                <div class="loading-spinner">
+                                                    <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                                    <p class="text-muted">Loading miscellaneous...</p>
+                                                </div>
+                                                <t t-if="mrp_order.get('work_centers')">
+                                                    <table class="table table-hover mt-3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Operation Type</th>
+                                                                <th scope="col">Source</th>
+                                                                <th scope="col">Project</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+
+                                                                <td><t t-esc="mrp_order.get('operation_type', 'N/A')"/></td>
+                                                                <td><t t-esc="mrp_order.get('source', 'N/A')"/></td>
+                                                                <td><t t-esc="mrp_order.get('project_name', 'N/A')"/></td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </t>
+                                                <t t-else="">
+                                                    <p class="text-muted mt-3">No miscellaneous data available.</p>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 text-center mt-4">
+                                            <a href="/mrp/orders/dashboard" class="btn btn-primary">
+                                                <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center py-5">
+                                            <i class="fa fa-exclamation-circle fa-3x text-muted mb-3"></i>
+                                            <h5 class="fw-bold text-muted">Order Not Found</h5>
+                                            <p class="text-muted">The requested manufacturing order could not be
+                                                found.</p>
+                                            <a href="/mrp/orders/dashboard" class="btn btn-primary rounded-pill">
+                                                <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                                            </a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
