@@ -64,8 +64,21 @@ Portal supports filtering expenses by last week, last month, or last year, and g
 ## Leads Generation Portal
 A modern portal where users can generate CRM leads by entering opportunity details, contact info, source, tags and description.
 If the contact exists, the system attaches the lead to it — otherwise, a new contact is created. Upon successful submission, a confirmation modal with success status is shown.
+summary of records also dislayed on top in moderan kanban boxes showing confirm , inprogress, planed , finished and cancelled records
 
+# Manufacturing Admin Portal DashBoard
+A modern, animated manufacturing dashboard that displays all MRP (Manufacturing) records in a clean, responsive interface.
 
+The admin can:
+Apply filters to view records for a specific responsible user.
+Filter records by their production state.
+Use quick filters for fast navigation.
+Clear all applied filters with one click.
+
+Each record includes a "View" button that opens a detailed page showing:
+Components – products to consume, quantities, and consumption status.
+Work Centers – operation names, assigned work centers, durations, and states.
+Miscellaneous Information – operation type, source document, related project, and more.
 
 ## Loan & Advances Portal
 Designed and implemented a comprehensive Loan & Advances Portal that allows users to:
