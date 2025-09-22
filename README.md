@@ -66,6 +66,9 @@ A modern portal where users can generate CRM leads by entering opportunity detai
 If the contact exists, the system attaches the lead to it — otherwise, a new contact is created. Upon successful submission, a confirmation modal with success status is shown.
 summary of records also dislayed on top in moderan kanban boxes showing confirm , inprogress, planed , finished and cancelled records
 
+### Leads Portal Deashboard
+Designed and developed a dynamic Leads & Opportunities Dashboard in Odoo, enabling admins to analyze sales performance efficiently. The dashboard allows filtering by salesperson, date range, and record type (leads or opportunities). It provides real-time KPIs including total leads, opportunities, expected revenue, and deals in view, along with detailed CRM records. Enhanced decision-making through interactive filtering, clean UI, and insightful metrics presentation.”
+
 # Manufacturing Admin Portal DashBoard
 A modern, animated manufacturing dashboard that displays all MRP (Manufacturing) records in a clean, responsive interface.
 
