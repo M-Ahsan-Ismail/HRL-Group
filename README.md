@@ -102,6 +102,17 @@ Each grievance record automatically captures the employee (based on env.user), t
 
 
 
+## Journal Entry Portal
+🧾 Journal Entry Portal (Odoo Custom Web Module)
+Developed a custom Journal Entry portal in Odoo that allows users to seamlessly create journal entries through a clean and interactive web interface.
+Users can select date, reference, journal, and company to create entries.
+If a company is not selected, journal and line entry fields remain disabled, enforcing logical data entry.
+On selecting a company, the related journals, accounts, and partners are dynamically filtered and displayed for that company.
+Upon successful creation, a modern success modal appears, showing key entry details with two action buttons:
+🔹 Create Another Entry
+🔹 View History
+The History Page lists all entries created by the current user, with filter options (from–to date) and the ability to download any entry report directly.
+
 
 
 
